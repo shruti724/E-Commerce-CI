@@ -10,6 +10,8 @@ const brandSchema = new mongoose.Schema({
   meta_keywords: { type: String, default: "" },
   is_indexed: { type: Boolean, default: true },
   status: { type: String, default: "active" },
+  isDeleted: {type: Boolean, default: false},
+   // for soft delete
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
 });

@@ -1,16 +1,21 @@
-// createBrand, getBrands, updateBrand, deleteBrand;
 const Brand = require("../models/brandModel");
 const slugify = require("slugify");
 
+// Get all brands
 const getBrands = async (req, res) => {
   try {
-    const brands = await Brand.find();
-    res.status(200).json(brands);
+    const data = await Brand.find({
+      // for soft delete
+      isDeleted: false
+      
+    });
+    res.status(200).json({success: true, data, message:"Getting the brands",status: 200});
   } catch (error) {
-    res.status(400).json({ message: "Error fetching brands", error });
+    res.status(400).json({success:false, data:{}, message: "Error fetching brands", status:400});
   }
 };
 
+// Add a new brand
 const addBrand = async (req, res) => {
   try {
     const {
@@ -23,11 +28,12 @@ const addBrand = async (req, res) => {
       meta_keywords,
       is_indexed,
       status,
+      isDeleted,
     } = req.body;
 
     const generatedSlug = slug ? slug : slugify(title, { lower: true });
 
-    const newBrand = new Brand({
+    const data = new Brand({
       title,
       slug: generatedSlug,
       brand_front_image,
@@ -37,17 +43,19 @@ const addBrand = async (req, res) => {
       meta_keywords,
       is_indexed,
       status,
+      isDeleted: isDeleted || false, // Default to false if not provided
     });
-    await newBrand.save();
-    res.status(201).json({
+    await data.save();
+    res.status(201).json({success:true, data, 
       message: "Brand added successfully",
-      category: newBrand,
+      status:201
     });
   } catch (error) {
-    res.status(400).json({ message: "Error adding brand", error });
+    res.status(400).json({ success:false, data:{}, message: "Error adding brand", status:400 });
   }
 };
 
+// Update a brand
 const updateBrand = async (req, res) => {
   try {
     const { id } = req.params;
@@ -61,11 +69,12 @@ const updateBrand = async (req, res) => {
       meta_keywords,
       is_indexed,
       status,
+      isDeleted,
     } = req.body;
 
     const generatedSlug = slug ? slug : slugify(title, { lower: true });
 
-    const brand = await brand.findByIdAndUpdate(
+    const data = await Brand.findByIdAndUpdate(
       id,
       {
         title,
@@ -77,34 +86,61 @@ const updateBrand = async (req, res) => {
         meta_keywords,
         is_indexed,
         status,
+        isDeleted: isDeleted || false, // Default to false if not provided
       },
       { new: true }
     );
-    if (!brand) {
-      return res.status(404).json({ message: "Brand not found" });
+
+    if (!data) {
+      return res.status(404).json({success:false, data:{}, message: "Brand not found", status: 404});
     }
 
-    res.status(200).json({
-      message: "Brand updated successfully",
-      brand,
+    res.status(200).json({success:true, data,
+      message: "Brand updated successfully", status:200
+      
     });
   } catch (error) {
-    res.status(400).json({ message: "Error updating category", error });
+    res.status(400).json({success:false, data:{}, message: "Error updating brand", status:400 });
   }
 };
 
+// Hard delete a brand
 const deleteBrand = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const brand = await Brand.findByIdAndDelete(id);
-    if (!brand) {
-      return res.status(404).json({ message: "Brand not found" });
+    const data = await Brand.findByIdAndDelete(id);
+    if (!data) {
+      return res.status(404).json({success:false, data:{}, message: "Brand not found", status:404 });
     }
 
-    res.status(200).json({ message: "Brand deleted successfully" });
+    res.status(200).json({success:true, data:{}, message: "Brand deleted successfully", status: 200 });
   } catch (error) {
-    res.status(400).json({ message: "Error deleting brand", error });
+    res.status(400).json({success:false, data:{}, message: "Error deleting brand", status:400 });
+  }
+};
+
+// Soft delete a brand by marking it as deleted
+const softDeleteById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const data = await Brand.findByIdAndUpdate(
+      id,
+      { deletedAt: new Date() }, // Mark as deleted
+      { new: true }
+    );
+
+    if (!data) {
+      return res.status(404).json({success:false, data:{}, message: "Brand not found", status: 404 });
+    }
+
+    res.status(200).json({success:true, data:{},
+      message: "Brand soft deleted successfully",
+      status:200
+    });
+  } catch (error) {
+    res.status(400).json({success:false, data:{}, message: "Error soft deleting brand", status:400 });
   }
 };
 
@@ -113,4 +149,5 @@ module.exports = {
   addBrand,
   updateBrand,
   deleteBrand,
+  softDeleteById,
 };
