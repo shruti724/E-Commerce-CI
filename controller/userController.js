@@ -185,7 +185,6 @@ async function updateUser(req, res) {
       data: {},
       message: "Unable to update user",
       status: 400,
-      error
     });
   }
 }
