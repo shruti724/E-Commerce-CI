@@ -15,6 +15,12 @@ const auth = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log("Decoded token:", decoded);
 
+    // Check if the token has expired
+    const currentTime = Math.floor(Date.now() / 1000);
+    if (decoded.exp < currentTime) {
+      return res.status(401).json({ message: "Token has expired" });
+    }
+
     req.user = decoded.user;
 
     const user = await User.findById(req.user.id);
