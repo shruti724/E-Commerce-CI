@@ -1,11 +1,9 @@
 const mongoose = require("mongoose");
 
 
-
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    unique: true,
     required: true,
   },
   email: {
@@ -13,20 +11,22 @@ const userSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  //password length 6
   password: {
     type: String,
     required: true,
   },
   role: {
     type: String,
-    required: true,
+    default: "user",
   }, // Specify your role as Admin othewise by default it will be user.
   status: {
     type: String,
     default: "active",
   },
   profile_image: {
-    type: string,
+    type: String,
+    default: ""
   },
   phone: {
     type: String,

@@ -1,43 +1,65 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
-
+const validator = require("validator");
 
 // Create a new user
 async function createUser(req, res) {
   try {
-    const {
-      username,
-      email,
-      password,
-      status,
-      phone,
-      profile_image,
-      role,
-      isDeleted,
-    } = req.body;
+    const { username, email, password } = req.body;
 
-    if (!username || !email || !password || !status || !phone || !role) {
+    if (!username || !email || !password) {
       return res.status(400).json({
         success: false,
         data: {},
-        message: "Please provide all required fields",
+        message:
+          "Please provide all required fields: username, email, and password",
+        status: 400,
+      });
+    }
+
+    // Validate email
+    if (!validator.isEmail(email)) {
+      return res.status(400).json({
+        success: false,
+        data: {},
+        message: "Please provide a valid email address",
+        status: 400,
+      });
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        data: {},
+        message: "Email already exists",
+        status: 400,
+      });
+    }
+
+    // Validate password strength
+    if (
+      !validator.isStrongPassword(password, {
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+    ) {
+      return res.status(400).json({
+        success: false,
+        data: {},
+        message:
+          "Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, one number, and one symbol",
         status: 400,
       });
     }
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    const data = new User({
-      username,
-      email,
-      password: hashedPassword,
-      status,
-      profile_image,
-      phone,
-      role,
-      isDeleted,
-    });
+    const data = new User({ username, email, password: hashedPassword });
     await data.save();
     res.status(201).json({
       success: true,
@@ -116,7 +138,7 @@ async function updateUser(req, res) {
       password,
       phone,
       role,
-      profile_image,
+      // profile_image,
       status,
       isDeleted,
     } = req.body;
