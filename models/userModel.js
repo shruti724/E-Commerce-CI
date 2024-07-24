@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
-    required: false,
+    default: ""
   },
   created_at: {
     type: Date,
