@@ -1,26 +1,20 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-const categorySchema = new mongoose.Schema({
+const categorySchema = new Schema({
   title: { type: String, required: true },
-  slug: { type: String, unique: true, required: true },
-  parent_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Category",
-    default: null,
-  },
-
-  product_front_image: { type: mongoose.Schema.Types.Mixed, default: {} },
-  product_image_gallery: { type: mongoose.Schema.Types.Mixed, default: [] },
-  meta_title: { type: String, default: "" },
-  meta_description: { type: String, default: "" },
-  meta_keywords: { type: String, default: "" },
+  slug: { type: String, unique: true },
+  parent_id: { type: Schema.Types.ObjectId, ref: "Category" },
+  product_front_image: String,
+  product_image_gallery: [String],
+  meta_title: String,
+  meta_description: String,
+  meta_keywords: String,
   is_indexed: { type: Boolean, default: true },
-  status: { type: String, default: "active" },
+  status: String,
   isDeleted: { type: Boolean, default: false },
-  created_at: { type: Date, default: Date.now },
-  updated_at: { type: Date, default: Date.now },
+  deletedAt: { type: Date },
+  products: [{ type: Schema.Types.ObjectId, ref: "Product" }],
 });
 
-const Category = mongoose.model("Category", categorySchema);
-
-module.exports = Category;
+module.exports = mongoose.model("Category", categorySchema);

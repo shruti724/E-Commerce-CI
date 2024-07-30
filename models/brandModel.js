@@ -4,7 +4,7 @@ const brandSchema = new mongoose.Schema({
   title: { type: String, required: true },
   slug: { type: String, unique: true, required: true },
   brand_front_image: { type: mongoose.Schema.Types.Mixed, default: {} },
-  brand_image_gallery: { type: mongoose.Schema.Types.Mixed, default: [] },
+  // brand_image_gallery: { type: mongoose.Schema.Types.Mixed, default: [] },
   meta_title: { type: String, default: "" },
   meta_description: { type: String, default: "" },
   meta_keywords: { type: String, default: "" },
