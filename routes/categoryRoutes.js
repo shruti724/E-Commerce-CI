@@ -5,27 +5,21 @@ const {
   addCategory,
   updateCategory,
   deleteCategory,
+  addProductToCategory,
+  getCategoryWithProducts
 } = require("../controller/categoryController");
 
 const authMiddleware = require("../middlewares/authMiddleware")
-
+const checkAdmin = require("../middlewares/isAdmin")
 const router = express.Router();
 
 router.get("/categories", authMiddleware, checkAdmin, getCategories);
 router.post("/category", authMiddleware, addCategory);
 router.put("/category/:id", authMiddleware, updateCategory);
 router.delete("/category/:id", authMiddleware, checkAdmin, deleteCategory);
+router.post("/add-product", addProductToCategory);
+router.get("/:id/products", getCategoryWithProducts);
 
-function checkAdmin(req, res, next) {
-  if (req.user.role !== "admin") {
-    return res.status(403).json({
-      success: false,
-      message: "Access denied. Admins only.",
-      status: 403,
-    });
-  }
-  next();
-}
 
 module.exports = router;
 

@@ -8,10 +8,12 @@ const {
   deleteUser,
   getUserById,
   softDeleteById,
-  logoutUser
+  logoutUser,
+  media
 } = require("../controller/userController");
 
 const router = express.Router();
+
 
 router.post("/register", createUser);
 router.get("/users", authMiddleware, checkAdmin, getUsers);
@@ -21,6 +23,7 @@ router.put("/user/:id", authMiddleware, updateUser);
 router.delete("/user/:id", authMiddleware, checkAdmin, deleteUser);
 router.delete("/user/soft/:id", softDeleteById)
 router.post("/logout", logoutUser);
+router.post("/users/profile_image", authMiddleware, media);
 
 function checkAdmin(req, res, next) {
   if (req.user.role !== "admin") {
