@@ -2,6 +2,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const validator = require("validator");
+const { response } = require("express");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 // Create a new user
 async function createUser(req, res) {
@@ -258,7 +262,7 @@ async function loginUser(req, res) {
     jwt.sign(
       payload,
       process.env.JWT_SECRET,
-      { expiresIn: "1h" },
+      { expiresIn: "1d" },
       (err, token) => {
         if (err) throw err;
         res.cookie("token", token, { httpOnly: true });
@@ -313,7 +317,7 @@ const softDeleteById = async (req, res) => {
 
 async function logoutUser(req, res) {
   try {
-    res.clearCookie("token"); // Clear the token cookie
+    res.clearCookie("token"); 
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     res.status(500).json({
@@ -324,6 +328,89 @@ async function logoutUser(req, res) {
   }
 }
 
+// images uploading
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const userId = req.user.id; 
+
+    
+    const uploadPath = path.join(__dirname, `../public/images/users/${userId}`);
+
+    // Create directory if it doesn't exist
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => {
+    // Use a unique filename
+    cb(
+      null,
+      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+    );
+  },
+});
+
+// Init upload
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1000000 }, // Limit file size to 1MB
+  fileFilter: (req, file, cb) => {
+    checkFileType(file, cb);
+  },
+}).single("profile_image");
+
+// Check file type
+function checkFileType(file, cb) {
+  const filetypes = /jpeg|jpg|png|gif/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
+
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb("Error: Images Only!");
+  }
+}
+
+// Middleware for profile image uploads
+const media = (req, res, next) => {
+  upload(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({ success: false, message: err });
+    }
+
+    if (!req.file) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No file uploaded" });
+    }
+
+    try {
+      const user = await User.findById(req.user.id);
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found" });
+      }
+
+      user.profile_image = req.file.path;
+      await user.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Profile image uploaded successfully",
+        data: { profile_image: user.profile_image },
+      });
+    } catch (error) {
+      console.error("Error uploading profile image:", error);
+      res.status(500).json({ success: false, message: "Server error" });
+    }
+  });
+};
+
 module.exports = {
   createUser,
   getUsers,
@@ -333,4 +420,5 @@ module.exports = {
   deleteUser,
   softDeleteById,
   logoutUser,
+  media
 };
