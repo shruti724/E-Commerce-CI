@@ -1,11 +1,12 @@
 const Product = require("../models/productModel");
 const CartItem = require("../models/cartModel");
+const User = require("../models/userModel");
 
 // Add product to cart
 const addToCart = async (req, res) => {
   try {
     const { product_id, quantity } = req.body;
-    const user_id = req.user.id; 
+    const user_id = req.user.id;
 
     // Fetch the product using the product_id
     const product = await Product.findById(product_id);
@@ -47,15 +48,27 @@ const addToCart = async (req, res) => {
   }
 };
 
-// Get current user's cart
+// Get current user's cart with pagination
 const getCart = async (req, res) => {
   try {
-    const user_id = req.user.id; 
-    const cartItems = await CartItem.find({ user_id }).populate("product_id");
-    const users = await User.find({user_id}).populate("user_id")
+    const user_id = req.user.id;
+    const { page = 1, limit = 10 } = req.query; // Default to page 1 and limit 10
+
+    const cartItems = await CartItem.find({ user_id })
+      .populate("product_id")
+      .skip((page - 1) * limit)
+      .limit(parseInt(limit));
+
+    const totalItems = await CartItem.countDocuments({ user_id });
+
     res.status(200).json({
       success: true,
-      data: {cartItems, users},
+      data: {
+        cartItems,
+        totalItems,
+        totalPages: Math.ceil(totalItems / limit),
+        currentPage: parseInt(page),
+      },
       message: "Cart fetched successfully",
     });
   } catch (error) {
