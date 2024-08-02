@@ -9,6 +9,11 @@ const bodyParser = require("body-parser")
 const productRoutes = require("./routes/productRoutes")
 const cartRoutes = require("./routes/cartRoutes")
 const wishlistRoutes = require("./routes/wishlistRoutes")
+const couponRoutes = require("./routes/couponRoutes")
+const addressRoutes = require("./routes/addressRoutes")
+const orderRoutes = require("./routes/orderRoutes") 
+const shipmentRoutes = require("./routes/shipmentRoutes")
+const reviewRoutes = require("./routes/reviewRoutes")
 
 dotenv.config();
 
@@ -36,6 +41,11 @@ app.use("/api", brandRoutes);
 app.use("/api", productRoutes);
 app.use("/api", cartRoutes);
 app.use("/api", wishlistRoutes);
+app.use("/api", couponRoutes)
+app.use("/api", addressRoutes)
+app.use("/api", orderRoutes)
+app.use("/api", shipmentRoutes)
+app.use("/api", reviewRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
