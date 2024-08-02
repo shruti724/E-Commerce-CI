@@ -1,5 +1,6 @@
 const express = require("express");
 const authMiddleware = require("../middlewares/authMiddleware");
+
 const {
   createUser,
   getUsers,
@@ -24,6 +25,7 @@ router.delete("/user/:id", authMiddleware, checkAdmin, deleteUser);
 router.delete("/user/soft/:id", softDeleteById)
 router.post("/logout", logoutUser);
 router.post("/users/profile_image", authMiddleware, media);
+
 
 function checkAdmin(req, res, next) {
   if (req.user.role !== "admin") {
