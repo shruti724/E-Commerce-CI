@@ -6,18 +6,18 @@ const orderSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
-    // required: true,
+    required: true,
   },
   products: [
     {
       product: {
         type: Schema.Types.ObjectId,
         ref: "Product",
-        // required: true,
+        required: true,
       },
       quantity: {
         type: Number,
-        // required: true,
+        required: true,
       },
     },
   ],
@@ -39,11 +39,11 @@ const orderSchema = new Schema({
   },
   total_Amount: {
     type: Number,
-    // required: true,
+    required: true,
   },
   grand_total: {
     type: Number,
-    // required: true,
+    required: true,
   },
   status: {
     type: String,
@@ -57,6 +57,10 @@ const orderSchema = new Schema({
   coupon: {
     type: Schema.Types.ObjectId,
     ref: "Coupon",
+  },
+  payment: {
+    type: Schema.Types.ObjectId,
+    ref: "Payment",
   },
   created_at: {
     type: Date,
@@ -77,10 +81,7 @@ orderSchema.pre("save", async function (next) {
     let invoiceId;
 
     while (!isUnique) {
-      // Generate a random 8-character string
       invoiceId = crypto.randomBytes(4).toString("hex").toUpperCase();
-
-      // Check if the generated invoiceId already exists in the database
       const existingOrder = await mongoose.models.Order.findOne({
         invoice_id: invoiceId,
       });
