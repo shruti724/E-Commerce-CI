@@ -1,6 +1,5 @@
 const Review = require("../models/reviewModel");
 const Product = require("../models/productModel");
-const User = require("../models/userModel");
 
 // Create a new review
 const createReview = async (req, res) => {
@@ -42,7 +41,9 @@ const createReview = async (req, res) => {
 // Get a list of reviews
 const getReviews = async (req, res) => {
   try {
-    const { page, limit, skip } = req.pagination;
+    const page = req.pagination?.page || 1;
+    const limit = req.pagination?.limit || 10;
+    const skip = (page - 1) * limit;
 
     const reviews = await Review.find()
       .skip(skip)
@@ -63,6 +64,7 @@ const getReviews = async (req, res) => {
     });
   }
 };
+
 
 // Get review by ID
 const getReviewById = async (req, res) => {
