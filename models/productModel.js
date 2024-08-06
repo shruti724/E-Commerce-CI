@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// Define the schema for products
 const productSchema = new Schema({
   title: { type: String, required: true },
   slug: { type: String, unique: true },
@@ -35,6 +34,7 @@ const productSchema = new Schema({
   discount_on_product: { type: Number },
   discount_type: { type: String, enum: ["flat", "percentage"] },
   discounted_price: { type: Number },
+  quantity: {type: Number, default: 1},
   is_indexed: { type: Boolean, default: true },
   is_in_stock: { type: Boolean, default: true },
   is_featured: { type: Boolean, default: false },
