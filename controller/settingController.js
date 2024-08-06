@@ -51,17 +51,27 @@ const upsertSetting = async (req, res) => {
     const { key } = req.params;
     const { value, description } = req.body;
 
-    const setting = await Setting.findOneAndUpdate(
-      { key },
-      { value, description },
-      // Create if not exists
-      { new: true, upsert: true }
-    );
+    // Check if the setting already exists
+    let setting = await Setting.findOne({ key });
+
+    let message;
+    if (setting) {
+      // If the setting exists, update it
+      setting.value = value;
+      setting.description = description;
+      await setting.save();
+      message = "Setting already exists and updated successfully";
+    } else {
+      // If the setting does not exist, create a new one
+      setting = new Setting({ key, value, description });
+      await setting.save();
+      message = "Setting created successfully";
+    }
 
     res.status(200).json({
       success: true,
       data: setting,
-      message: "Setting updated successfully",
+      message: message,
     });
   } catch (error) {
     res.status(400).json({
@@ -104,3 +114,4 @@ module.exports = {
   upsertSetting,
   deleteSetting,
 };
+
