@@ -93,6 +93,7 @@ const addProduct = async (req, res) => {
       meta_keywords,
       discount_on_product,
       discount_type,
+      quantity, 
       is_indexed,
       is_in_stock,
       is_featured,
@@ -131,8 +132,9 @@ const addProduct = async (req, res) => {
       discount_on_product,
       discount_type,
       discounted_price,
+      quantity, 
       is_indexed,
-      is_in_stock,
+      is_in_stock: quantity > 0 ? is_in_stock : false, 
       is_featured,
       status,
     });
@@ -144,11 +146,15 @@ const addProduct = async (req, res) => {
       message: "Product added successfully",
     });
   } catch (error) {
-    console.error("Error adding product:", error.message); // Detailed error logging
-    res.status(400).json({ success: false, message: error.message || "Error adding product" });
+    console.error("Error adding product:", error.message);
+    res
+      .status(400)
+      .json({
+        success: false,
+        message: error.message || "Error adding product",
+      });
   }
 };
-
 
 // Update a product
 const updateProduct = async (req, res) => {
@@ -168,6 +174,7 @@ const updateProduct = async (req, res) => {
       meta_keywords,
       discount_on_product,
       discount_type,
+      quantity, 
       is_indexed,
       is_in_stock,
       is_featured,
@@ -204,8 +211,9 @@ const updateProduct = async (req, res) => {
     product.discount_on_product = discount_on_product;
     product.discount_type = discount_type;
     product.discounted_price = discounted_price;
+    product.quantity = quantity; 
     product.is_indexed = is_indexed;
-    product.is_in_stock = is_in_stock;
+    product.is_in_stock = quantity > 0 ? is_in_stock : false;
     product.is_featured = is_featured;
     product.status = status;
 
@@ -268,8 +276,8 @@ const media = async (req, res) => {
       );
 
       const imageObj = {
-        type: path.extname(file.originalname).slice(1), 
-        alt: file.originalname, 
+        type: path.extname(file.originalname).slice(1),
+        alt: file.originalname,
         path: imagePath,
       };
 
