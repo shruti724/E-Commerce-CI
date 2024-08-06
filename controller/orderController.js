@@ -2,17 +2,14 @@ const Order = require("../models/orderModel");
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
 const Coupon = require("../models/couponModel");
+const Payment = require("../models/paymentModel")
+
 
 // Create a new order
 const createOrder = async (req, res) => {
   try {
-    const {
-      products, 
-      tax,
-      delivery_charge,
-      shipment, 
-      coupon, 
-    } = req.body;
+    const { products, tax, delivery_charge, shipment, coupon, payment } =
+      req.body;
     const user_id = req.user.id;
 
     const user = await User.findById(user_id);
@@ -58,7 +55,7 @@ const createOrder = async (req, res) => {
       }
     }
 
-    // To calculate the total amount
+    // To calculate the total amount and validate stock
     let totalAmount = 0;
     let discountPrice = 0;
     for (const item of products) {
@@ -69,14 +66,28 @@ const createOrder = async (req, res) => {
           message: `Product not found`,
         });
       }
+
+      // Validate product quantity
+      if (product.quantity < item.quantity) {
+        return res.status(400).json({
+          success: false,
+          message: `Insufficient stock for product ${product.title}`,
+        });
+      }
+
       totalAmount += product.discounted_price * item.quantity;
       discountPrice +=
         (product.price - product.discounted_price) * item.quantity;
+
+      // Update product quantity
+      product.quantity -= item.quantity;
+      await product.save();
     }
 
     // Apply coupon discount
     const grandTotal = totalAmount + tax - couponDiscount + delivery_charge;
 
+    // Create new order
     const order = new Order({
       user: user_id,
       products,
@@ -92,6 +103,28 @@ const createOrder = async (req, res) => {
 
     await order.save();
 
+    // If payment info is provided, create a payment and link it to the order
+    if (payment) {
+      const paymentData = new Payment({
+        ...payment,
+        order: order._id,
+      });
+
+      await paymentData.save();
+
+      // Update order status based on payment status
+      if (paymentData.status === "failed") {
+        order.status = "Cancelled";
+      } else if (paymentData.status === "pending") {
+        order.status = "Pending";
+      } else if (paymentData.status === "completed") {
+        order.status = "Processing";
+      }
+
+      order.payment = paymentData._id;
+      await order.save();
+    }
+
     res.status(201).json({
       success: true,
       data: order,
@@ -105,6 +138,7 @@ const createOrder = async (req, res) => {
     });
   }
 };
+
 
 // Get a list of orders
 const getOrders = async (req, res) => {
@@ -157,14 +191,33 @@ const getOrderById = async (req, res) => {
   }
 };
 
+
 // Update order status
 const updateOrderStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
-    const user = req.user; 
+    const user = req.user;
+    const updateData = req.body;
 
-    const order = await Order.findById(id);
+    const validStatuses = [
+      "pending",
+      "processing",
+      "shipped",
+      "delivered",
+      "cancelled",
+    ];
+
+    if (
+      updateData.status &&
+      !validStatuses.includes(updateData.status.toLowerCase())
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid status",
+      });
+    }
+
+    const order = await Order.findById(id).populate("products.product").populate("payment");
 
     if (!order) {
       return res.status(404).json({
@@ -174,9 +227,36 @@ const updateOrderStatus = async (req, res) => {
     }
 
     if (user.role === "admin" || user.isAdmin) {
-      order.status = status || order.status;
+      for (let key in updateData) {
+        if (updateData.hasOwnProperty(key)) {
+          if (key === "status") {
+            order.status = updateData[key].toLowerCase();
+          } else if (key === "products" && Array.isArray(updateData[key])) {
+            order.products = updateData[key];
+          } else {
+            order[key] = updateData[key];
+          }
+        }
+      }
+
+      // Check if payment status needs to be updated
+      if (order.payment) {
+        const payment = await Payment.findById(order.payment);
+        if (payment) {
+          if (payment.status === "failed") {
+            order.status = "Cancelled";
+          } else if (payment.status === "pending") {
+            order.status = "Pending";
+          } else if (payment.status === "completed") {
+            order.status = "Processing";
+          }
+        }
+      }
     } else {
-      if (status === "cancelled") {
+      if (
+        updateData.status &&
+        updateData.status.toLowerCase() === "cancelled"
+      ) {
         order.status = "cancelled";
       } else {
         return res.status(403).json({
@@ -191,12 +271,12 @@ const updateOrderStatus = async (req, res) => {
     res.status(200).json({
       success: true,
       data: order,
-      message: "Order status updated successfully",
+      message: "Order updated successfully",
     });
   } catch (error) {
     res.status(400).json({
       success: false,
-      message: "Error updating order status",
+      message: "Error updating order",
       error: error.message,
     });
   }
