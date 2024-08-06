@@ -1,6 +1,7 @@
 const Product = require("../models/productModel");
 const CartItem = require("../models/cartModel");
 const User = require("../models/userModel");
+const slugify = require("slugify");
 
 // Add product to cart
 const addToCart = async (req, res) => {
@@ -8,7 +9,15 @@ const addToCart = async (req, res) => {
     const { product_id, quantity } = req.body;
     const user_id = req.user.id;
 
-    // Fetch the product using the product_id
+    // Validate quantity
+    if (quantity < 1) {
+      return res.status(400).json({
+        success: false,
+        message: "Quantity must be at least 1",
+      });
+    }
+
+    // To check if the product exists
     const product = await Product.findById(product_id);
     if (!product) {
       return res.status(404).json({
@@ -17,14 +26,24 @@ const addToCart = async (req, res) => {
       });
     }
 
-    // Check if the cart item already exists
+    // To check if the cart item already exists
     let cartItem = await CartItem.findOne({ user_id, product_id });
-
     if (cartItem) {
-      // If cart item exists, update the quantity
+      // To check if enough stock is available for the requested quantity or not
+      if (product.quantity < cartItem.quantity + quantity) {
+        return res.status(400).json({
+          success: false,
+          message: "Not enough stock available to add the requested quantity",
+        });
+      }
       cartItem.quantity += quantity;
     } else {
-      // Create a new cart item
+      if (product.quantity < quantity) {
+        return res.status(400).json({
+          success: false,
+          message: "Not enough stock available",
+        });
+      }
       cartItem = new CartItem({
         user_id,
         product_id,
@@ -52,7 +71,7 @@ const addToCart = async (req, res) => {
 const getCart = async (req, res) => {
   try {
     const user_id = req.user.id;
-    const { page = 1, limit = 10 } = req.query; // Default to page 1 and limit 10
+    const { page = 1, limit = 10 } = req.query;
 
     const cartItems = await CartItem.find({ user_id })
       .populate("product_id")
@@ -84,11 +103,9 @@ const getCart = async (req, res) => {
 const updateCartItem = async (req, res) => {
   try {
     const { id } = req.params;
-    const { quantity } = req.body;
+    const updateData = req.body;
 
-    // Find cart item
     const cartItem = await CartItem.findById(id);
-
     if (!cartItem) {
       return res.status(404).json({
         success: false,
@@ -96,8 +113,66 @@ const updateCartItem = async (req, res) => {
       });
     }
 
-    // Update quantity
-    cartItem.quantity = quantity;
+    const product = await Product.findById(cartItem.product_id);
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    // Update quantity based on updateData
+    if (updateData.quantity !== undefined) {
+      if (updateData.quantity < 1) {
+        return res.status(400).json({
+          success: false,
+          message: "Quantity must be at least 1",
+        });
+      }
+      // Check stock available or not
+      if (product.quantity < updateData.quantity) {
+        return res.status(400).json({
+          success: false,
+          message: "Not enough stock available",
+        });
+      }
+      cartItem.quantity = updateData.quantity;
+    }
+
+    if (updateData.action) {
+      switch (updateData.action) {
+        case "plus":
+          if (product.quantity <= cartItem.quantity) {
+            return res.status(400).json({
+              success: false,
+              message: "Not enough stock available to increment",
+            });
+          }
+          cartItem.quantity += 1;
+          break;
+
+        case "minus":
+          if (cartItem.quantity <= 1) {
+            return res.status(400).json({
+              success: false,
+              message: "Quantity cannot be less than 1",
+            });
+          }
+          cartItem.quantity -= 1;
+          break;
+
+        default:
+          return res.status(400).json({
+            success: false,
+            message: "Invalid action",
+          });
+      }
+    }
+
+    if (updateData.product_id) cartItem.product_id = updateData.product_id;
+    cartItem.updated_at = Date.now();
+
+    // Save the updated cart item
     await cartItem.save();
 
     res.status(200).json({
@@ -106,7 +181,6 @@ const updateCartItem = async (req, res) => {
       message: "Cart item updated successfully",
     });
   } catch (error) {
-    console.error("Error updating cart item:", error);
     res.status(400).json({
       success: false,
       message: "Error updating cart item",
