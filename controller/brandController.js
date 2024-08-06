@@ -79,8 +79,8 @@ const updateBrand = async (req, res) => {
     const {
       title,
       slug,
-      brand_front_image, // Expecting { type, alt, path }
-      brand_image_gallery, // Array of objects [{ type, alt, path }]
+      brand_front_image, 
+      brand_image_gallery, 
       meta_title,
       meta_description,
       meta_keywords,
@@ -191,7 +191,7 @@ const media = async (req, res) => {
         .json({ success: false, message: "Brand not found" });
     }
 
-    // Process brand front image
+    // Processing brand front-image
     if (req.files["brand_front_image"]) {
       const frontImageFile = req.files["brand_front_image"][0];
       const { originalname } = frontImageFile;
@@ -204,7 +204,7 @@ const media = async (req, res) => {
       };
     }
 
-    // Process brand image gallery
+    // Processing brand image gallery
     if (req.files["brand_image_gallery"]) {
       brand.brand_image_gallery = req.files["brand_image_gallery"].map(
         (file) => {
