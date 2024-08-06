@@ -14,3 +14,4 @@ router.get("/addresses", authMiddleware, getUserWithAddresses);
 router.post("/address/other", authMiddleware, addANewAddress);
 router.delete("/address/:id", authMiddleware, deleteAddress);
 module.exports = router;
+ 
