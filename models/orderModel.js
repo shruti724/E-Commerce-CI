@@ -72,7 +72,7 @@ const orderSchema = new Schema({
   },
 });
 
-// Pre-save middleware to generate a unique invoice_id
+// Middleware to generate a unique invoice_id
 orderSchema.pre("save", async function (next) {
   const order = this;
 
@@ -81,7 +81,7 @@ orderSchema.pre("save", async function (next) {
     let invoiceId;
 
     while (!isUnique) {
-      invoiceId = crypto.randomBytes(4).toString("hex").toUpperCase();
+      invoiceId = "ECOM"+crypto.randomBytes(6).toString("hex").toUpperCase();
       const existingOrder = await mongoose.models.Order.findOne({
         invoice_id: invoiceId,
       });
