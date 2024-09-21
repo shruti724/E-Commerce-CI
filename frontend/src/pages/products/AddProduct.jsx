@@ -5,6 +5,7 @@ import SideAndSearchbar from "../../Components/layouts/SideAndSearchbar";
 import { loginUser } from "../../features/auth/authSlice";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import toastify CSS
+import Footer from "../../Components/layouts/Footer";
 
 const AddProduct = () => {
   const dispatch = useDispatch();
@@ -74,7 +75,7 @@ const AddProduct = () => {
   return (
     <>
       <SideAndSearchbar />
-      <div className="pcoded-main-container">
+      <main>
         <form onSubmit={handleSubmit}>
           <div className="card">
             <div className="card-header">
@@ -386,10 +387,11 @@ const AddProduct = () => {
             </div>
           </div>
         </form>
-      </div>
+      </main>
 
       {/* Toast Container for showing toasts */}
       <ToastContainer />
+      <Footer/>
     </>
   );
 };

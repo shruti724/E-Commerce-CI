@@ -60,7 +60,7 @@ const handleLogout = async () => {
       {/* [ Pre-loader ] End */}
       <SideAndSearchbar />
       {/* [ Main Content ] start */}
-      <div className="pcoded-main-container">
+      <div >
         <div className="pcoded-wrapper">
           <div className="pcoded-content">
             <div className="pcoded-inner-content">
@@ -109,30 +109,27 @@ const handleLogout = async () => {
                                 {/* From here  */}
                                 <div className="col-md-6 col-xl-4 ">
                                   <div className="card user-card">
-                                    <div className="card-body  text-center">
-                                      <div className="usre-image">
+                                    <div class="card-body text-center d-flex flex-column align-items-center">
+                                      <div class="user-image">
                                         <img
-                                          // src={`${process.env.PUBLIC_URL}/assets/images/widget/img-round1.jpg`}{user.name}
                                           src="../assets/images/widget/img-round1.jpg"
-                                          className="img-radius wid-100 m-auto"
+                                          class="img-radius wid-100 m-auto"
                                           alt="User-Profile-Image"
                                         />
                                       </div>
-                                      <h6 className="f-w-600 m-t-25 m-b-10">
-                                        {"Guest"}
-                                        {/*  dynamically repace name extracting from token  */}
+                                      <h6 class="f-w-600 m-t-25 m-b-10">
+                                        Guest
                                       </h6>
                                       <p>
-                                        {" "}
                                         Active(static) | Male | Born 23.05.1992
                                       </p>
                                       <hr />
-                                      <p className="m-t-15">
-                                        Edit Profile Image
-                                      </p>
+                                      <p class="m-t-15">Edit Profile Image</p>
                                     </div>
                                   </div>
                                 </div>
+
+                                {/* User Details */}
                                 <form>
                                   <div className="form-group">
                                     <div className="form-group">
@@ -404,7 +401,11 @@ const handleLogout = async () => {
                           </div>
                         </form>
 
-                        <button type="submit" className="btn btn-danger" onClick={handleLogout}>
+                        <button
+                          type="submit"
+                          className="btn btn-danger"
+                          onClick={handleLogout}
+                        >
                           Logout
                         </button>
                       </div>

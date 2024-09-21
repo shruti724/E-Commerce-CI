@@ -3,15 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchCategories,
   deleteCategory,
-} from "../../features/category/categorySlice"; // Adjust the import based on your actual path
+} from "../../features/category/categorySlice";
 import SideAndSearchbar from "../../Components/layouts/SideAndSearchbar";
-import EditCategoryModal from "./EditCategoryModal"; // Create this component similarly to EditProductModal
+import EditCategoryModal from "./EditCategoryModal";
 
 function CategoriesList() {
   const dispatch = useDispatch();
   const { isLoading, data, isError } = useSelector((state) => state.category);
-  const searchQuery = useSelector((state) => state.search.query); // Get the search query from Redux
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("All");
 
   // Fetch categories when the component mounts
   useEffect(() => {
@@ -35,10 +36,14 @@ function CategoriesList() {
     setSelectedCategory(null);
   };
 
-  // Filter categories based on the search query
-  const filteredData = data.filter((category) =>
-    category.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter categories based on the search query and status filter
+  const filteredData = data.filter((category) => {
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      category.title.toLowerCase().includes(searchLower) &&
+      (statusFilter === "All" || category.status === statusFilter)
+    );
+  });
 
   // Display loading state
   if (isLoading) {
@@ -62,7 +67,67 @@ function CategoriesList() {
                 For admin only <code>table-category</code> inside ECOMMERCE
               </span>
             </div>
-            <div className="card-body table-border-style">
+            <div className="card-body">
+              {/* Filters and Search Bar */}
+              <div className="d-flex justify-content-between mb-3">
+                <div>
+                  <span
+                    className={
+                      statusFilter === "All" ? "text-primary" : "text-secondary"
+                    }
+                    onClick={() => setStatusFilter("All")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    All ({data.length})
+                  </span>
+                  <span className="mx-2">|</span>
+                  <span
+                    className={
+                      statusFilter === "Active"
+                        ? "text-primary"
+                        : "text-secondary"
+                    }
+                    onClick={() => setStatusFilter("Active")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Active (
+                    {
+                      data.filter((category) => category.status === "Active")
+                        .length
+                    }
+                    )
+                  </span>
+                  <span className="mx-2">|</span>
+                  <span
+                    className={
+                      statusFilter === "Inactive"
+                        ? "text-primary"
+                        : "text-secondary"
+                    }
+                    onClick={() => setStatusFilter("Inactive")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Inactive (
+                    {
+                      data.filter((category) => category.status === "Inactive")
+                        .length
+                    }
+                    )
+                  </span>
+                </div>
+                <div className="d-flex align-items-center">
+                  <input
+                    type="text"
+                    placeholder="Search by name"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="form-control me-2"
+                  />
+                  <button className="btn btn-primary btn-sm">Search</button>
+                </div>
+              </div>
+
+              {/* Categories Table */}
               <div className="table-responsive">
                 <table className="table table-striped">
                   <thead>
@@ -71,6 +136,7 @@ function CategoriesList() {
                       <th>Category Id</th>
                       <th>Category Name</th>
                       <th>Description</th>
+                      <th>Status</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -82,6 +148,7 @@ function CategoriesList() {
                           <td>{category._id}</td>
                           <td>{category.title}</td>
                           <td>{category.description}</td>
+                          <td>{category.status}</td>
                           <td>
                             <button
                               className="btn btn-primary"
@@ -100,7 +167,7 @@ function CategoriesList() {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="5" className="text-center">
+                        <td colSpan="6" className="text-center">
                           No categories available.
                         </td>
                       </tr>

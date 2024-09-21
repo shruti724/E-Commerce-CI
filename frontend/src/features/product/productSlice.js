@@ -62,7 +62,7 @@ export const updateProduct = createAsyncThunk(
         `/api/product/${productId}`,
         updatedProductData
       );
-      return response.data.data; // Assuming the API returns the updated product
+      return response.data.data; 
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -88,6 +88,7 @@ export const productSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
       })
+      
       .addCase(deleteProduct.pending, (state) => {
         state.isLoading = true;
         state.isError = false;

@@ -1,38 +1,33 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../features/auth/authSlice"; 
 
 const Login = () => {
-  const [loginData, setLoginData] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { isLoading, error } = useSelector((state) => state.auth); 
+
+  const [loginData, setLoginData] = useState({ email: "", password: "" });
 
   const handleChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post("/api/login", loginData);
-      console.log(response.data); 
-      if (response.data.success) {
-        localStorage.setItem("token", response.data.token); 
+    dispatch(loginUser(loginData))
+      .unwrap()
+      .then(() => {
         navigate("/"); 
-      } else {
-        setError(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      setError(error.response?.data?.message || "An error occurred");
-    }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
- 
+
   return (
     <>
-      {/* <a href="https://www.flaticon.com/free-icons/edit" title="edit icons">
-       
-      </a> */}
       <div className="auth-wrapper">
         <div className="auth-content container">
           <div className="card">
@@ -92,15 +87,19 @@ const Login = () => {
                         </label>
                       </div>
                     </div>
-                    <button type="submit" className="btn btn-primary mb-4">
+                    <button
+                      type="submit"
+                      className="btn btn-primary mb-4"
+                      disabled={isLoading} // Disable button while loading
+                    >
                       Login
                     </button>
                   </form>
                   <p className="mb-2 text-muted">
                     Forgot password?{" "}
-                    <a href="auth-reset-password.html" className="f-w-400">
+                    <Link to="/resetpassword" className="f-w-400">
                       Reset
-                    </a>
+                    </Link>
                   </p>
                   <p className="mb-0 text-muted">
                     Don’t have an account?{" "}

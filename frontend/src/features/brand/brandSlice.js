@@ -4,10 +4,17 @@ import axios from "axios";
 // Fetch brands
 export const fetchBrands = createAsyncThunk("brand/fetchBrands", async () => {
   const response = await axios.get("/api/brands");
-  console.log(response.data.data) 
+  console.log(response.data.data);
   return response.data.data;
-
 });
+
+export const addBrand = createAsyncThunk(
+  "brand/addBrand",
+  async (brandData) => {
+    const response = await axios.post("/api/brand", brandData);
+    return response.data.data;
+  }
+);
 
 // Update brand
 export const updateBrand = createAsyncThunk(
@@ -17,7 +24,7 @@ export const updateBrand = createAsyncThunk(
       `/api/brands/${updatedBrand._id}`,
       updatedBrand
     );
-    return response.data; // Adjust based on the response structure if necessary
+    return response.data.data; // Adjust based on the response structure if necessary
   }
 );
 
@@ -29,7 +36,6 @@ export const deleteBrand = createAsyncThunk(
     return brandId;
   }
 );
-
 
 const brandSlice = createSlice({
   name: "brand",
@@ -62,6 +68,9 @@ const brandSlice = createSlice({
       })
       .addCase(deleteBrand.fulfilled, (state, action) => {
         state.data = state.data.filter((brand) => brand._id !== action.payload);
+      })
+      .addCase(addBrand.fulfilled, (state, action) => {
+        state.data.push(action.payload);
       });
   },
 });

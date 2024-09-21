@@ -1,0 +1,19 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.flex-grow-1 {
+  overflow-y: auto;
+}
+main {
+  margin-top: 60px; /* Or any desired value */
+  margin-bottom: 60px;
+}
+
+/* footer {
+    position: fixed;
+    height: 60px;
+    bottom: 0;
+    width: 100%;
+} */

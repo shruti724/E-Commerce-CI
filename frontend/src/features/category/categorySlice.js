@@ -1,4 +1,3 @@
-// features/category/categorySlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -7,7 +6,15 @@ export const fetchCategories = createAsyncThunk(
   "category/fetchCategories",
   async () => {
     const response = await axios.get("/api/categories");
-    console.log(response.data.data);
+    console.log("data: ",response.data.data);
+    return response.data.data;
+  }
+);
+
+export const addCategory = createAsyncThunk(
+  "category/addCategory",
+  async (categoryData) => {
+    const response = await axios.post("/api/category", categoryData);
     return response.data.data;
   }
 );
@@ -33,6 +40,14 @@ export const updateCategory = createAsyncThunk(
   }
 );
 
+export const bulkDeleteCategories = createAsyncThunk(
+  "category/bulkDeleteCategories",
+  async (categoryIds) => {
+    await axios.post(`/api/categories/bulk-delete`, { ids: categoryIds });
+    return categoryIds;
+  }
+);
+
 const categorySlice = createSlice({
   name: "category",
   initialState: {
@@ -54,6 +69,9 @@ const categorySlice = createSlice({
         state.isLoading = false;
         state.isError = true;
       })
+      .addCase(addCategory.fulfilled, (state, action) => {
+        state.data.push(action.payload);
+      })
       .addCase(deleteCategory.fulfilled, (state, action) => {
         state.data = state.data.filter(
           (category) => category._id !== action.payload
@@ -62,6 +80,11 @@ const categorySlice = createSlice({
       .addCase(updateCategory.fulfilled, (state, action) => {
         state.data = state.data.map((category) =>
           category._id === action.payload._id ? action.payload : category
+        );
+      })
+      .addCase(bulkDeleteCategories.fulfilled, (state, action) => {
+        state.data = state.data.filter(
+          (category) => !action.payload.includes(category._id)
         );
       });
   },

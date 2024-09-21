@@ -9,6 +9,7 @@ import SideAndSearchbar from "../../Components/layouts/SideAndSearchbar";
 import EditProductModal from "./EditProductModal";
 import { fetchCategories } from "../../features/category/categorySlice";
 import { fetchBrands } from "../../features/brand/brandSlice";
+// import Pagination from "../../Components/Pagination";
 
 function ProductsList() {
   const dispatch = useDispatch();
@@ -27,6 +28,8 @@ function ProductsList() {
   const [bulkAction, setBulkAction] = useState(""); 
   const [page, setPage] = useState(1); 
   const [pages, setPages] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const limit = 10;
   
@@ -85,6 +88,13 @@ function ProductsList() {
     }
   };
 
+   const handlePageChange = (page) => {
+     if (page >= 1 && page <= totalPages) {
+       setCurrentPage(page);
+     }
+   };
+
+   console.log("data: ", data)
   const filteredData = data
     .filter((product) => {
       const searchLower = searchQuery.toLowerCase();
@@ -116,7 +126,7 @@ function ProductsList() {
   return (
     <>
       <SideAndSearchbar />
-      <div className="pcoded-main-container">
+      <main>
         <div className="col-xl-12 d-flex justify-content-center mt-5">
           <div className="card">
             <div className="card-header">
@@ -315,6 +325,12 @@ function ProductsList() {
                               className="btn btn-icon"
                               onClick={() => handleEdit(product)}
                             >
+                              <i className="fas fa-eye"></i>
+                            </button>
+                            <button
+                              className="btn btn-icon"
+                              onClick={() => handleEdit(product)}
+                            >
                               <i className="fas fa-edit"></i>
                             </button>
                             <button
@@ -335,6 +351,11 @@ function ProductsList() {
                     )}
                   </tbody>
                 </table>
+                {/* <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        /> */}
               </div>
               <div className="pagination-button d-flex justify-content-center align-items-center my-4">
                 <span className="me-2">
@@ -362,7 +383,7 @@ function ProductsList() {
             </div>
           </div>
         </div>
-      </div>
+      </main>
       {selectedProduct && (
         <EditProductModal
           product={selectedProduct}
