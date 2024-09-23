@@ -10,6 +10,8 @@ import EditProductModal from "./EditProductModal";
 import { fetchCategories } from "../../features/category/categorySlice";
 import { fetchBrands } from "../../features/brand/brandSlice";
 // import Pagination from "../../Components/Pagination";
+import "./Products.css"
+import Footer from "../../Components/layouts/Footer";
 
 function ProductsList() {
   const dispatch = useDispatch();
@@ -226,8 +228,7 @@ function ProductsList() {
                   </button>
                 </span>
               </div>
-
-              <div className="d-flex mb-3">
+              <div className="d-flex mb-3 overflow-auto hide-scrollbar">
                 <span>
                   <select
                     className="form-select me-2"
@@ -390,6 +391,8 @@ function ProductsList() {
           onClose={handleCloseModal}
         />
       )}
+
+      <Footer/>
     </>
   );
 }

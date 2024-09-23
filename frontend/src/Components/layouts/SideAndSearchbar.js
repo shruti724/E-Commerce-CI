@@ -6,7 +6,7 @@ import {
   fetchSearchResults,
   clearSearch,
 } from "../../features/search/searchSlice";
-import './SideAndSearchbar.css'; // Ensure you import your CSS file
+import './SideAndSearchbar.css'; 
 
 const SideAndSearchbar = () => {
   const navigate = useNavigate();
@@ -135,99 +135,106 @@ const SideAndSearchbar = () => {
                 >
                   <ul className="nav flex-column">
                     <li className="nav-item border-bottom">
-                      <Link className="nav-link" to="/ordersTable">
-                        <i className="fas fa-box mx-2"></i>
-                        Home
+                      <Link className="nav-link" to="/">
+                        <i className="fas fa-tachometer-alt mx-2"></i>
+                        Dashobard
                       </Link>
                     </li>
 
                     <li className="nav-item border-bottom">
                       <Link className="nav-link" to="/ordersTable">
-                        <i className="fas fa-box mx-2"></i>
+                        <i className="fas fa-box-open mx-2"></i>
                         Orders
                       </Link>
                     </li>
+
                     <li className="nav-item border-bottom">
-                      <Link className="nav-link" to="/addOrder">
-                        <i className="fas fa-box mx-2"></i>
-                        Add Order
-                      </Link>
-                    </li>
-                    <li className="nav-item border-bottom">
-                      <Link className="nav-link" to="/products">
-                        <i className="fas fa-box mx-2"></i>
+                      <Link className="nav-link" to="/productlist">
+                        <i className="fas fa-boxes mx-2"></i>
                         Products
                       </Link>
                     </li>
                     <li className="nav-item border-bottom">
-                      <Link className="nav-link" to="/addProduct">
-                        <i className="fas fa-box mx-2"></i>
+                      <Link className="nav-link" to="/addproduct">
+                        <i className="fas fa-plus-square mx-2"></i>
                         Add Product
                       </Link>
                     </li>
                     <li className="nav-item border-bottom">
-                      <Link className="nav-link" to="/brands">
-                        <i className="fas fa-box mx-2"></i>
+                      <Link className="nav-link" to="/brandslist">
+                        <i className="fas fa-tags mx-2"></i>
                         Brands
                       </Link>
                     </li>
                     <li className="nav-item border-bottom">
-                      <Link className="nav-link" to="/addBrand">
-                        <i className="fas fa-box mx-2"></i>
+                      <Link className="nav-link" to="/addbrand">
+                        <i className="fas fa-plus-circle mx-2"></i>
                         Add Brand
                       </Link>
                     </li>
                     <li className="nav-item border-bottom">
-                      <Link className="nav-link" to="/categories">
-                        <i className="fas fa-box mx-2"></i>
+                      <Link className="nav-link" to="/categorieslist">
+                        <i className="fas fa-th-list mx-2"></i>
                         Categories
                       </Link>
                     </li>
                     <li className="nav-item border-bottom">
-                      <Link className="nav-link" to="/addCategory">
-                        <i className="fas fa-box mx-2"></i>
+                      <Link className="nav-link" to="/addcategory">
+                        <i className="fas fa-plus mx-2"></i>
                         Add Category
                       </Link>
                     </li>
                     <li className="nav-item border-bottom">
-                      <Link className="nav-link" to="/users">
-                        <i className="fas fa-box mx-2"></i>
+                      <Link className="nav-link" to="/userslist">
+                        <i className="fas fa-users mx-2"></i>
                         Users
                       </Link>
                     </li>
                     <li className="nav-item border-bottom">
-                      <Link className="nav-link" to="/addUser">
-                        <i className="fas fa-box mx-2"></i>
+                      <Link className="nav-link" to="/adduser">
+                        <i className="fas fa-user-plus mx-2"></i>
                         Add User
                       </Link>
                     </li>
                     <li className="nav-item border-bottom">
-                      <Link className="nav-link" to="/coupons">
+                      <Link className="nav-link" to="/couponslist">
                         <i className="fas fa-box mx-2"></i>
                         Coupons
                       </Link>
                     </li>
                     <li className="nav-item border-bottom">
-                      <Link className="nav-link" to="/addCoupons">
-                        <i className="fas fa-box mx-2"></i>
+                      <Link className="nav-link" to="/addcoupon">
+                        <i className="fas fa-ticket-alt mx-2"></i>
                         Add Coupons
                       </Link>
                     </li>
                     <li className="nav-item border-bottom">
-                      <Link className="nav-link" to="/reviews">
-                        <i className="fas fa-box mx-2"></i>
+                      <Link className="nav-link" to="/review">
+                        <i className="fas fa-star mx-2"></i>
                         Reviews
                       </Link>
                     </li>
                     <li className="nav-item border-bottom">
                       <Link className="nav-link" to="/addReview">
-                        <i className="fas fa-box mx-2"></i>
+                        <i className="fas fa-pen mx-2"></i>
                         Add Review
+                      </Link>
+                    </li>
+                    <li className="nav-item border-bottom">
+                      <Link className="nav-link" to="/addReview">
+                        <i className="fas fa-credit-card mx-2"></i>
+                        Payment
+                      </Link>
+                    </li>
+                    <li className="nav-item border-bottom">
+                      <Link className="nav-link" to="/addReview">
+                        <i className="fas fa-cog mx-2"></i>
+                        Settings
                       </Link>
                     </li>
                     <li className="nav-item ">
                       <a className="nav-link" href="#" onClick={handleLogout}>
-                        <i className="fas fa-box mx-2"></i>
+                        <i className="fas fa-sign-out-alt mx-2"></i>
                         Logout
                       </a>
                     </li>

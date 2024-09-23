@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SideAndSearchbar from "../Components/layouts/SideAndSearchbar";
 import Footer from "../Components/layouts/Footer";
 
 const Dashboard = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [user, setUser] = useState([]);
   const [productsDetails, setProductsDetails] = useState(null);
   const [ordersDetails, setOrderDetails] = useState(null);
@@ -24,7 +24,11 @@ const Dashboard = () => {
         // Fetch all users' details
         const usersResponse = await axios.get("/api/users");
         setUsersDetails(usersResponse.data.data);
-
+        
+if (userResponse.data.data.role !== 'admin') {
+          navigate('/productuserlist'); // Redirect to ProductUserList if not admin
+          return;
+        }
         //Fetch all products' details
         const productResponse = await axios.get("api/products");
         setProductsDetails(productResponse.data.pagination);
@@ -57,7 +61,7 @@ const Dashboard = () => {
       <SideAndSearchbar />
       {/* [ Header ] end */}
       {/* [ Main Content ] start */}
-      <div>
+      <div className="my-12"> 
         <div className="pcoded-wrapper">
           <div className="pcoded-content">
             <div className="pcoded-inner-content">
@@ -67,7 +71,7 @@ const Dashboard = () => {
                   <div className="page-header">
                     <div className="page-block">
                       <div className="row align-items-center">
-                        <div className="col-md-12">
+                        <div className="col-md-12 my-4">
                           <div className="page-header-title">
                             <h5>Welcome To ECOMMERCE</h5>
                           </div>

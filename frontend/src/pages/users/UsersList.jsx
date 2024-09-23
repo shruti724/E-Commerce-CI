@@ -8,6 +8,7 @@ import {
 import SideAndSearchbar from "../../Components/layouts/SideAndSearchbar";
 import EditUserModal from "./EditUserModal";
 import { useNavigate } from "react-router-dom";
+import Footer from "../../Components/layouts/Footer";
 
 const UsersList = () => {
   const navigate = useNavigate();
@@ -57,9 +58,9 @@ const UsersList = () => {
   return (
     <>
       <SideAndSearchbar />
-      <div className="pcoded-main-container">
-        <div className="col-xl-12 d-flex justify-content-center mt-5">
-          <div className="card">
+      
+        <div className="col-xl-12 d-flex justify-content-center mt-5 mb-4">
+          <div className="card my-4">
             <div className="card-header">
               <h5>Users List</h5>
               <span className="d-block m-t-5">
@@ -141,7 +142,7 @@ const UsersList = () => {
             </div>
           </div>
         </div>
-      </div>
+      
       {showModal && (
         <EditUserModal
           user={selectedUser}
@@ -149,6 +150,7 @@ const UsersList = () => {
           onCancel={handleCloseModal}
         />
       )}
+      <Footer/>
     </>
   );
 };

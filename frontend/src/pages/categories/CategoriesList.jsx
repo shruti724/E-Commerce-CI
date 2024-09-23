@@ -6,6 +6,8 @@ import {
 } from "../../features/category/categorySlice";
 import SideAndSearchbar from "../../Components/layouts/SideAndSearchbar";
 import EditCategoryModal from "./EditCategoryModal";
+import Footer from "../../Components/layouts/Footer";
+import "./Category.css"
 
 function CategoriesList() {
   const dispatch = useDispatch();
@@ -58,7 +60,7 @@ function CategoriesList() {
   return (
     <>
       <SideAndSearchbar />
-      <div className="pcoded-main-container">
+      <main>
         <div className="col-xl-12 d-flex justify-content-center mt-5">
           <div className="card">
             <div className="card-header">
@@ -178,7 +180,8 @@ function CategoriesList() {
             </div>
           </div>
         </div>
-      </div>
+      </main>
+
       {selectedCategory && (
         <EditCategoryModal
           category={selectedCategory}
@@ -186,6 +189,7 @@ function CategoriesList() {
           onCancel={handleCloseModal}
         />
       )}
+      <Footer />
     </>
   );
 }

@@ -4,6 +4,7 @@ import { fetchBrands, deleteBrand } from "../../features/brand/brandSlice";
 import SideAndSearchbar from "../../Components/layouts/SideAndSearchbar";
 import EditBrandModal from "./EditBrandModal";
 import BrandDetailsModal from "./BandDetailsModal";
+import Footer from "../../Components/layouts/Footer";
 
 const BrandsList = () => {
   const dispatch = useDispatch();
@@ -96,7 +97,7 @@ const BrandsList = () => {
   return (
     <>
       <SideAndSearchbar />
-      <div className="pcoded-main-container">
+      <div>
         <div className="col-xl-12 d-flex justify-content-center mt-5">
           <div className="card">
             <div className="card-header">
@@ -173,6 +174,7 @@ const BrandsList = () => {
       {showDetails && (
         <BrandDetailsModal brand={selectedBrand} onClose={handleCloseDetails} />
       )}
+      <Footer/>
     </>
   );
 };

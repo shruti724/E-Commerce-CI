@@ -8,6 +8,7 @@ import {
 } from "../../features/review/reviewSlice";
 import SideAndSearchbar from "../../Components/layouts/SideAndSearchbar";
 import EditReviewModal from "./EditReviewModal";
+import Footer from "../../Components/layouts/Footer";
 
 function ReviewsList() {
   const dispatch = useDispatch();
@@ -108,9 +109,9 @@ function ReviewsList() {
   return (
     <>
       <SideAndSearchbar />
-      <div className="pcoded-main-container">
-        <div className="col-xl-12 d-flex justify-content-center mt-5">
-          <div className="card">
+      <div>
+        <div className="col-xl-12 d-flex justify-content-center mt-5 mb-4 ">
+          <div className="card my-4">
             <div className="card-header">
               <h5>Reviews List</h5>
               <span className="d-block m-t-5">
@@ -152,7 +153,8 @@ function ReviewsList() {
                     onClick={() => setStatusFilter("pending")}
                     style={{ cursor: "pointer" }}
                   >
-                    Pending ({data.filter((r) => r.status === "pending").length})
+                    Pending ({data.filter((r) => r.status === "pending").length}
+                    )
                   </span>
                   <span className="mx-2">|</span>
                   <span
@@ -300,11 +302,9 @@ function ReviewsList() {
         </div>
       </div>
       {selectedReview && (
-        <EditReviewModal
-          review={selectedReview}
-          onClose={handleCloseModal}
-        />
+        <EditReviewModal review={selectedReview} onClose={handleCloseModal} />
       )}
+      <Footer/>
     </>
   );
 }

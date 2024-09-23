@@ -8,11 +8,12 @@ import brandReducer from "../features/brand/brandSlice";
 import reviewReducer from "../features/review/reviewSlice";
 import userReducer from "../features/user/userSlice";
 import wishlistReducer from "../features/wishlist/wishlistSlice";
-import couponReducer from "../features/userfeatures/coupon/couponUserSlice"; 
+import couponUserReducer from "../features/userfeatures/coupon/couponUserSlice"; 
 import productUserReducer from "../features/userfeatures/product/productUserSlice";
 import cartUserReducer from "../features/userfeatures/cart/cartUserSilce"
 import orderUserReducer from "../features/userfeatures/order/orderUserSlice"
 import categoryUserReducer from "../features/userfeatures/category/categoryUserSlice";
+import couponReducer from "../features/coupon/couponSlice"
 
 export const store = configureStore({
   reducer: {
@@ -25,10 +26,11 @@ export const store = configureStore({
     brand: brandReducer,
     review: reviewReducer,
     wishlist: wishlistReducer,
-    coupon: couponReducer,
+    couponUser: couponUserReducer,
     productUser: productUserReducer,
     cartUser: cartUserReducer,
     orderUser: orderUserReducer,
     categoryUser: categoryUserReducer,
+    coupons: couponReducer, 
   },
 });

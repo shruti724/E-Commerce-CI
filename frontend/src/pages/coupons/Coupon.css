@@ -1,0 +1,7 @@
+.container {
+  padding-bottom: 2rem; /* Add padding to create space above footer */
+}
+
+.card {
+  margin-bottom: 2rem; /* Ensure card has margin below */
+}

@@ -6,6 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom"; // For redirection
 import Cookies from "js-cookie";
+import Footer from "../../Components/layouts/Footer";
 
 const AddReview = () => {
   const dispatch = useDispatch();
@@ -47,66 +48,70 @@ const AddReview = () => {
   return (
     <>
       <SideAndSearchbar />
-      <div className="pcoded-main-container">
-        <form onSubmit={handleSubmit}>
-          <div className="card">
-            <div className="card-header">
-              <h4>Add New Review</h4>
-            </div>
-            <div className="card-body">
-              <div className="form-group">
-                <label>Product ID</label>
-                <input
-                  type="text"
-                  name="product_id"
-                  value={formData.product_id}
-                  onChange={handleChange}
-                  className="form-control"
-                  disabled={isLoading}
-                  placeholder="Enter product ID"
-                />
+      <div className="col-xl-12 d-flex justify-content-center mt-5">
+        <div className="card my-4" style={{ maxWidth: "600px", width: "100%" }}>
+          <form onSubmit={handleSubmit}>
+            <div className="card">
+              <div className="card-header">
+                <h4>Add New Review</h4>
               </div>
-              <div className="form-group">
-                <label>Rating</label>
-                <select
-                  name="rating"
-                  value={formData.rating}
-                  onChange={handleChange}
-                  className="form-control"
+              <div className="card-body">
+                <div className="form-group">
+                  <label>Product ID</label>
+                  <input
+                    type="text"
+                    name="product_id"
+                    value={formData.product_id}
+                    onChange={handleChange}
+                    className="form-control"
+                    disabled={isLoading}
+                    placeholder="Enter product ID"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Rating</label>
+                  <select
+                    name="rating"
+                    value={formData.rating}
+                    onChange={handleChange}
+                    className="form-control"
+                    disabled={isLoading}
+                  >
+                    <option value={0}>Select Rating</option>
+                    <option value={1}>1 - Poor</option>
+                    <option value={2}>2 - Fair</option>
+                    <option value={3}>3 - Good</option>
+                    <option value={4}>4 - Very Good</option>
+                    <option value={5}>5 - Excellent</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Comment</label>
+                  <textarea
+                    name="comment"
+                    value={formData.comment}
+                    onChange={handleChange}
+                    className="form-control"
+                    disabled={isLoading}
+                    placeholder="Write your review here"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
                   disabled={isLoading}
                 >
-                  <option value={0}>Select Rating</option>
-                  <option value={1}>1 - Poor</option>
-                  <option value={2}>2 - Fair</option>
-                  <option value={3}>3 - Good</option>
-                  <option value={4}>4 - Very Good</option>
-                  <option value={5}>5 - Excellent</option>
-                </select>
+                  Add Review
+                </button>
+                {isError && (
+                  <p className="text-danger">Failed to add review.</p>
+                )}
               </div>
-              <div className="form-group">
-                <label>Comment</label>
-                <textarea
-                  name="comment"
-                  value={formData.comment}
-                  onChange={handleChange}
-                  className="form-control"
-                  disabled={isLoading}
-                  placeholder="Write your review here"
-                />
-              </div>
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={isLoading}
-              >
-                Add Review
-              </button>
-              {isError && <p className="text-danger">Failed to add review.</p>}
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-
+      <Footer />
       <ToastContainer />
     </>
   );
