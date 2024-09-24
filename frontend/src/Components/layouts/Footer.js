@@ -19,10 +19,7 @@ const Footer = () => {
             <>
               {/* Admin Dashboard Icon */}
               <div className="col">
-                <Link
-                  to="/"
-                  className="text-decoration-none text-dark"
-                >
+                <Link to="/" className="text-decoration-none text-dark">
                   <i className="fas fa-tachometer-alt fa-lg"></i>
                   <p className="mb-0 small">Dashboard</p>
                 </Link>
@@ -77,7 +74,7 @@ const Footer = () => {
               {/* Home Icon */}
               <div className="col">
                 <Link
-                  to="/productlist"
+                  to="/landingpage"
                   className="text-decoration-none text-dark"
                 >
                   <i className="fas fa-home fa-lg"></i>

@@ -203,8 +203,12 @@ function ProductsList() {
                   </button>
                 </div>
               </div>
-              <div>
-                <span>
+              <div className="d-flex align-items-center">
+                {" "}
+                {/* Use d-flex to make it inline */}
+                <span className="me-2">
+                  {" "}
+                  {/* Margin end for spacing */}
                   <select
                     className="form-select me-2"
                     value={bulkAction}
@@ -216,7 +220,7 @@ function ProductsList() {
                     <option value="bulk-delete">Bulk Delete</option>
                   </select>
                 </span>
-                <span className="mx-1">
+                <span>
                   <button
                     type="button"
                     className="btn btn-danger btn-sm"
@@ -228,6 +232,7 @@ function ProductsList() {
                   </button>
                 </span>
               </div>
+
               <div className="d-flex mb-3 overflow-auto hide-scrollbar">
                 <span>
                   <select
@@ -392,7 +397,7 @@ function ProductsList() {
         />
       )}
 
-      <Footer/>
+      <Footer />
     </>
   );
 }

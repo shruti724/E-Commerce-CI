@@ -7,7 +7,7 @@ import Footer from "../../../Components/layouts/Footer";
 
 const CouponUserList = () => {
   const dispatch = useDispatch();
-  const { coupons, loading, error } = useSelector((state) => state.coupon);
+  const { coupons, loading, error } = useSelector((state) => state.couponUser);
   console.log("coupon: ", coupons)
 
   useEffect(() => {

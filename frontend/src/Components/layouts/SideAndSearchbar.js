@@ -7,9 +7,12 @@ import {
   clearSearch,
 } from "../../features/search/searchSlice";
 import './SideAndSearchbar.css'; 
+import axios from "axios";
+// import { logout } from "../../features/auth/authSlice";
 
 const SideAndSearchbar = () => {
   const navigate = useNavigate();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
   const query = useSelector((state) => state.search.query);
   const [inputValue, setInputValue] = useState(query);
@@ -22,7 +25,28 @@ const SideAndSearchbar = () => {
   };
 
   const handleLogout = async () => {
-    // Your logout logic
+    try {
+      console.log("Logging out...");
+      // Retrieve the token from localStorage or wherever you store it
+      const token = localStorage.getItem("token");
+
+      // Send a POST request to the logout endpoint with the token
+      await axios.post(
+        "/api/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Clear the token and redirect the user to the login page
+      localStorage.removeItem("token");
+      navigate("/login");
+    } catch (error) {
+      console.error("Error logging out:", error.message);
+    }
   };
 
   return (
@@ -47,28 +71,60 @@ const SideAndSearchbar = () => {
         </Link>
 
         {/* Icons in a single line */}
-        <div className="d-flex align-items-center">
-          {/* Search Icon */}
-          <button className="btn mx-2 p-0">
-            <i className="fas fa-search"></i>
-          </button>
+        {isUser && (
+          <>
+            <div className="d-flex align-items-center">
+              {/* Search Icon */}
+              <button className="btn mx-2 p-0">
+                <i className="fas fa-search"></i>
+              </button>
 
-          {/* Profile Icon */}
-          <Link to="/myProfileForm" className="btn mx-2 p-0">
-            <i className="fas fa-user"></i>
-          </Link>
+              {/* Profile Icon */}
+              <Link to="/myProfileForm" className="btn mx-2 p-0">
+                <i className="fas fa-user"></i>
+              </Link>
 
-          {/* Cart Icon */}
-          <Link to="/cartuserlist" className="btn p-0 position-relative">
-            <i className="fas fa-shopping-cart"></i>
-            <span
-              className="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-              style={{ transform: "translate(-50%, -50%)" }}
-            >
-              0
-            </span>
-          </Link>
-        </div>
+              {/* Cart Icon */}
+              <Link to="/cartuserlist" className="btn p-0 position-relative">
+                <i className="fas fa-shopping-cart"></i>
+                <span
+                  className="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                  style={{ transform: "translate(-50%, -50%)" }}
+                >
+                  0
+                </span>
+              </Link>
+            </div>
+          </>
+        )}
+        {isAdmin && (
+          <>
+            <div className="d-flex align-items-center">
+              {/* Search Icon */}
+              <button className="btn mx-2 p-0">
+                <i className="fas fa-search"></i>
+              </button>
+
+              <Link
+                to="/notifications"
+                className="btn mx-2 p-0 position-relative"
+              >
+                <i className="fas fa-bell"></i>
+                <span
+                  className="notification-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                  style={{ transform: "translate(-50%, -50%)" }}
+                >
+                  3 {/* Replace with dynamic count */}
+                </span>
+              </Link>
+
+              {/* Payment Icon */}
+              <Link to="/payments" className="btn mx-2 p-0">
+                <i className="fas fa-credit-card"></i>
+              </Link>
+            </div>
+          </>
+        )}
       </nav>
 
       {/* Overlay */}
@@ -86,20 +142,15 @@ const SideAndSearchbar = () => {
               <main>
                 <div>
                   <li className="nav-item border-bottom ">
-                    <Link className="nav-link me-4" to="/productuserlist">
+                    <Link className="nav-link me-4" to="/landingpage">
                       <i className="fas fa-home mx-2"></i>
                       Home
                     </Link>
                   </li>
-                  <li className="nav-item border-bottom">
-                    <Link className="nav-link me-4" to="/categoryuserlist">
-                      <i className="fas fa-tag mx-2"></i>
-                      Category
-                    </Link>
-                  </li>
+                  
                   <li className="nav-item border-bottom">
                     <Link className="nav-link me-4" to="/orderuserlist">
-                      <i className="fas fa-box mx-2"></i>
+                      <i className="fas fa-box-open mx-2"></i>
                       Orders
                     </Link>
                   </li>
@@ -110,16 +161,35 @@ const SideAndSearchbar = () => {
                     </Link>
                   </li>
                   <li className="nav-item border-bottom">
+                    <Link className="nav-link me-4" to="/couponuserlist">
+                      <i className="fas fa-box mx-2"></i>
+                      Coupons
+                    </Link>
+                  </li>
+                  <li className="nav-item border-bottom">
+                    <Link className="nav-link me-4" to="/orderuserlist">
+                      <i className="fas fa-cog mx-2"></i>
+                      Settings
+                    </Link>
+                  </li>
+                  <li className="nav-item border-bottom">
                     <Link className="nav-link me-4" to="/myProfileForm">
                       <i className="fas fa-user mx-2"></i>
                       My Profile
                     </Link>
                   </li>
-                  <li className="nav-item border-bottom">
-                    <a className="nav-link " href="#" onClick={handleLogout}>
-                      <i className="fas fa-user mx-2"></i>
-                      Logout
-                    </a>
+                  <li className="nav-item">
+                    {!isAuthenticated ? (
+                      <Link className="nav-link" to="/login">
+                        <i className="fas fa-sign-out-alt mx-2 "></i>
+                        Logout
+                      </Link>
+                    ) : (
+                      <a className="nav-link" href="#" onClick={handleLogout}>
+                        <i className="fas fa-sign-in-alt mx-2  "></i>
+                        Login
+                      </a>
+                    )}
                   </li>
                 </div>
               </main>

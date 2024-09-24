@@ -35,6 +35,7 @@ import CategoryUserLists from "../pages/userpages/categories/CategoryUserLists";
 import ProductDetailUser from "../pages/userpages/products/ProductDetailUser";
 import CouponsList from "../pages/coupons/CouponsList";
 import AddCoupon from "../pages/coupons/AddCoupon";
+import LandingPage from "../Components/LandingPage";
 
 const RoutesWithLogging = () => {
   const dispatch = useDispatch();
@@ -48,7 +49,7 @@ const RoutesWithLogging = () => {
 
   useEffect(() => {
     if (profile) {
-      console.log("profile: ",profile)
+      console.log("profile: ", profile);
       setRole(profile.role);
       // if (isAuthenticated && profile.role === "user") {
       //   navigate("/productuserlist");
@@ -60,7 +61,6 @@ const RoutesWithLogging = () => {
 
   const router = createBrowserRouter(
     createRoutesFromElements(
-      
       <Route path="/">
         {/* Public routes */}
         <Route path="login" element={<Login />} />
@@ -68,7 +68,6 @@ const RoutesWithLogging = () => {
 
         {/* Conditionally render routes based on role */}
         {isAuthenticated && role === "admin" && (
-          
           <>
             <Route path="orderstable" element={<OrdersTable />} />
             <Route path="productlist" element={<ProductsList />} />
@@ -81,13 +80,12 @@ const RoutesWithLogging = () => {
             <Route path="brandslist" element={<BrandsList />} />
             <Route path="review" element={<Review />} />
             <Route path="addreview" element={<AddReview />} />
-            <Route path="couponslist" element={<CouponsList/>}/>
-            <Route path="addcoupon" element={<AddCoupon/>}/>
+            <Route path="couponslist" element={<CouponsList />} />
+            <Route path="addcoupon" element={<AddCoupon />} />
           </>
         )}
         {isAuthenticated && role === "user" && (
           <>
-            
             <Route path="productuserlist" element={<ProductUserLists />} />
             <Route path="wishlist" element={<WishList />} />
             <Route path="couponuserlist" element={<CouponUserList />} />
@@ -99,13 +97,23 @@ const RoutesWithLogging = () => {
         )}
 
         {/* Protected routes */}
-        {<Route element={<Protected />}>
-          <Route index element={isAuthenticated && role==="admin"?<Dashboard />:<ProductUserLists/>} />
-          
-          <Route path="myProfileForm" element={<MyProfileForm />} />
-        </Route> 
-        }
+        {
+          <Route element={<Protected />}>
+            <Route
+              index
+              element={
+                isAuthenticated && role === "admin" ? (
+                  <Dashboard />
+                ) : (
+                  <ProductUserLists />
+                )
+              }
+            />
 
+            <Route path="myProfileForm" element={<MyProfileForm />} />
+          </Route>
+        }
+        <Route path="landingpage" element={<LandingPage />} />
         <Route path="resetpassword" element={<ResetPassword />} />
         <Route path="/reset/:token" element={<NewPassword />} />
         {/* Catch-all route for 404 */}
