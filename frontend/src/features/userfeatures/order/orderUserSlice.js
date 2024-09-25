@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
 // Define the initial state for the orders
 const initialState = {
@@ -9,16 +8,18 @@ const initialState = {
 };
 
 // Create an async thunk for fetching orders
-export const fetchOrders = createAsyncThunk("orders/fetchOrders", async () => {
-  try {
-    const response = await axios.get("/api/orderuser"); 
-    console.log("userorder:", response)
-    console.log("Hello")
-    return response.data;
-  } catch (error) {
-    throw new Error(error.message);
+export const fetchOrders = createAsyncThunk(
+  "orders/fetchOrders",
+  async (_, { extra: api, rejectWithValue }) => {
+    try {
+      const response = await api.get("/api/orderuser");
+      console.log("user order:", response);
+      return response.data.data; 
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to fetch orders");
+    }
   }
-});
+);
 
 // Create the orders slice
 const orderUserSlice = createSlice({
@@ -37,13 +38,11 @@ const orderUserSlice = createSlice({
       })
       .addCase(fetchOrders.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload || action.error.message;
       });
   },
 });
 
-// Export the async thunk
-// export { fetchOrders };
 
 // Export the reducer
 export default orderUserSlice.reducer;

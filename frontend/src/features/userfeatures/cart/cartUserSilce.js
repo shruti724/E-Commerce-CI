@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
 // Initial state
 const initialState = {
@@ -11,45 +10,57 @@ const initialState = {
 // Thunks for async actions
 export const fetchCartItems = createAsyncThunk(
   "cart/fetchCartItems",
-  async () => {
-    const response = await axios.get("/api/cart");
-    console.log("response cart: ", response.data.data.cartItems )
-    return response.data.data.cartItems; 
+  async (_, { rejectWithValue, extra: api }) => {
+    try {
+      const response = await api.get("/api/cart");
+      console.log("response cart: ", response.data.data.cartItems);
+      return response.data.data.cartItems;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Failed to fetch cart items"
+      );
+    }
   }
 );
 
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
-  async (item, { rejectWithValue }) => {
+  async (item, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.post("/api/cart", item);
-      return response.data; 
+      const response = await api.post("/api/cart", item);
+      return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(
+        error.response?.data || "Failed to add item to cart"
+      );
     }
   }
 );
 
 export const updateCartItem = createAsyncThunk(
   "cart/updateCartItem",
-  async ({ id, updates }, { rejectWithValue }) => {
+  async ({ id, updates }, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.put(`/api/cart/${id}`, updates);
-      return response.data; 
+      const response = await api.put(`/api/cart/${id}`, updates);
+      return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(
+        error.response?.data || "Failed to update cart item"
+      );
     }
   }
 );
 
 export const removeCartItem = createAsyncThunk(
   "cart/removeCartItem",
-  async (id, { rejectWithValue }) => {
+  async (id, { rejectWithValue, extra: api }) => {
     try {
-      await axios.delete(`/api/cart/${id}`);
-      return id; 
+      await api.delete(`/api/cart/${id}`);
+      return id;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(
+        error.response?.data || "Failed to remove cart item"
+      );
     }
   }
 );
@@ -71,7 +82,7 @@ const cartUserSlice = createSlice({
       })
       .addCase(fetchCartItems.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload || action.error.message;
       })
       .addCase(addToCart.pending, (state) => {
         state.loading = true;
@@ -79,7 +90,7 @@ const cartUserSlice = createSlice({
       })
       .addCase(addToCart.fulfilled, (state, action) => {
         state.loading = false;
-        state.cartItems.push(action.payload); // Assuming the added item is returned in the response
+        state.cartItems.push(action.payload);
       })
       .addCase(addToCart.rejected, (state, action) => {
         state.loading = false;

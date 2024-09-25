@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
 // Initial state
 const initialState = {
@@ -11,23 +10,27 @@ const initialState = {
 // Thunks for async actions
 export const fetchCoupons = createAsyncThunk(
   "coupon/fetchCoupons",
-  async () => {
-    const response = await axios.get("/api/coupons");
-    console.log("response:", response.data)
-    return response.data.data;
+  async (_, { extra: api, rejectWithValue }) => {
+    try {
+      const response = await api.get("/api/coupons");
+      console.log("response:", response.data);
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to fetch coupons");
+    }
   }
 );
 
 export const applyCoupon = createAsyncThunk(
   "coupon/applyCoupon",
-  async (couponCode, { rejectWithValue }) => {
+  async (couponCode, { extra: api, rejectWithValue }) => {
     try {
-      const response = await axios.post("/api/coupons/apply", {
+      const response = await api.post("/api/coupons/apply", {
         code: couponCode,
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || "Failed to apply coupon");
     }
   }
 );
@@ -49,7 +52,7 @@ const couponUserSlice = createSlice({
       })
       .addCase(fetchCoupons.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload || action.error.message;
       })
       .addCase(applyCoupon.pending, (state) => {
         state.loading = true;
@@ -57,8 +60,6 @@ const couponUserSlice = createSlice({
       })
       .addCase(applyCoupon.fulfilled, (state, action) => {
         state.loading = false;
-        // Handle successful coupon application
-        // For example, you might update a cart or user state
       })
       .addCase(applyCoupon.rejected, (state, action) => {
         state.loading = false;
@@ -66,7 +67,6 @@ const couponUserSlice = createSlice({
       });
   },
 });
-
 
 export const {} = couponUserSlice.actions;
 export default couponUserSlice.reducer;

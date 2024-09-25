@@ -1,28 +1,35 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
 // Thunk for fetching the wishlist
 export const fetchWishlist = createAsyncThunk(
   "wishlist/fetchWishlist",
-  async () => {
-    const response = await axios.get("/api/wishlist");
-    return response.data.data; // Extract the data from the response
+  async (_, { extra: api, rejectWithValue }) => {
+    try {
+      const response = await api.get("/api/wishlist");
+      return response.data.data; 
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Failed to fetch wishlist"
+      );
+    }
   }
 );
 
 const wishlistSlice = createSlice({
   name: "wishlist",
   initialState: {
-    wishlist: [], // Initialize as an array
+    wishlist: [], 
     loading: false,
     error: null,
   },
   reducers: {
     removeFromWishlist(state, action) {
-      state.wishlist = state.wishlist.filter((item) => item._id !== action.payload);
+      state.wishlist = state.wishlist.filter(
+        (item) => item._id !== action.payload
+      );
     },
     addToWishlist(state, action) {
-      // Handle adding to wishlist if needed
+      state.wishlist.push(action.payload); 
     },
   },
   extraReducers: (builder) => {
@@ -33,11 +40,11 @@ const wishlistSlice = createSlice({
       })
       .addCase(fetchWishlist.fulfilled, (state, action) => {
         state.loading = false;
-        state.wishlist = action.payload; // Set the wishlist data
+        state.wishlist = action.payload; 
       })
       .addCase(fetchWishlist.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload || action.error.message; 
       });
   },
 });

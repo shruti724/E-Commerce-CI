@@ -1,4 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
+import axios from "axios";
+import config from "../../config"; 
 import todoReducer from "../features/todo/todoSlice";
 import productReducer from "../features/product/productSlice";
 import searchReducer from "../features/search/searchSlice";
@@ -14,6 +16,10 @@ import cartUserReducer from "../features/userfeatures/cart/cartUserSilce"
 import orderUserReducer from "../features/userfeatures/order/orderUserSlice"
 import categoryUserReducer from "../features/userfeatures/category/categoryUserSlice";
 import couponReducer from "../features/coupon/couponSlice"
+
+const api = axios.create({
+  baseURL: config.apiUrl, 
+});
 
 export const store = configureStore({
   reducer: {
@@ -31,6 +37,12 @@ export const store = configureStore({
     cartUser: cartUserReducer,
     orderUser: orderUserReducer,
     categoryUser: categoryUserReducer,
-    coupons: couponReducer, 
+    coupons: couponReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      thunk: {
+        extraArgument: api,
+      },
+    }),
 });

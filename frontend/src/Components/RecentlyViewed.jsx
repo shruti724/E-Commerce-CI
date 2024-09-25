@@ -1,11 +1,11 @@
 import React from "react";
-import CategoryItem from "./CategoryItem"; 
-const CategoryNav = () => {
+import CategoryItem from "./CategoryItem";
+const RecentlyViewed = () => {
   return (
     <div className="category-nav">
       <div className="d-flex justify-content-between mt-3">
         <CategoryItem
-          imgSrc="/assets/images/bag.jpg" 
+          imgSrc="/assets/images/bag.jpg"
           altText="Electronics"
           text="Electronics"
           path="/electronics"
@@ -17,13 +17,13 @@ const CategoryNav = () => {
           path="/fashion"
         />
         <CategoryItem
-          imgSrc="/assets/images/bag.jpg" 
+          imgSrc="/assets/images/bag.jpg"
           altText="Beauty"
           text="Beauty"
           path="/beauty"
         />
         <CategoryItem
-          imgSrc="/assets/images/bag.jpg" 
+          imgSrc="/assets/images/bag.jpg"
           altText="Sports"
           text="Sports"
           path="/sports"
@@ -37,19 +37,19 @@ const CategoryNav = () => {
           path="/electronics"
         />
         <CategoryItem
-          imgSrc="/assets/images/bag.jpg" 
+          imgSrc="/assets/images/bag.jpg"
           altText="Fashion"
           text="Fashion"
           path="/fashion"
         />
         <CategoryItem
-          imgSrc="/assets/images/bag.jpg" 
+          imgSrc="/assets/images/bag.jpg"
           altText="Beauty"
           text="Beauty"
           path="/beauty"
         />
         <CategoryItem
-          imgSrc="/assets/images/bag.jpg" 
+          imgSrc="/assets/images/bag.jpg"
           altText="Sports"
           text="Sports"
           path="/sports"
@@ -62,4 +62,4 @@ const CategoryNav = () => {
   );
 };
 
-export default CategoryNav;
+export default RecentlyViewed;

@@ -1,18 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
 // Async thunk for fetching all users
 export const getUsers = createAsyncThunk(
   "users/getUsers",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.get("/api/users");
+      const response = await api.get("/api/users");
       console.log("data:", response.data.data.users);
       return {
         users: response.data.data.users,
         totalPages: response.data.totalPages,
       };
-      
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to fetch users"
@@ -24,9 +22,9 @@ export const getUsers = createAsyncThunk(
 // Async thunk for creating a user
 export const createUser = createAsyncThunk(
   "users/createUser",
-  async (userData, { rejectWithValue }) => {
+  async (userData, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.post("/api/register", userData);
+      const response = await api.post("/api/register", userData);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -36,13 +34,12 @@ export const createUser = createAsyncThunk(
   }
 );
 
-
 // Async thunk for fetching a user by ID
 export const getUserById = createAsyncThunk(
   "users/getUserById",
-  async (userId, { rejectWithValue }) => {
+  async (userId, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.get(`/api/users/${userId}`);
+      const response = await api.get(`/api/users/${userId}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -55,9 +52,9 @@ export const getUserById = createAsyncThunk(
 // Async thunk for updating a user
 export const updateUser = createAsyncThunk(
   "users/updateUser",
-  async ({ userId, userData }, { rejectWithValue }) => {
+  async ({ userId, userData }, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.put(`/api/users/${userId}`, userData);
+      const response = await api.put(`/api/users/${userId}`, userData);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -70,9 +67,9 @@ export const updateUser = createAsyncThunk(
 // Async thunk for deleting a user
 export const deleteUser = createAsyncThunk(
   "users/deleteUser",
-  async (userId, { rejectWithValue }) => {
+  async (userId, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.delete(`/api/users/${userId}`);
+      const response = await api.delete(`/api/users/${userId}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -85,9 +82,9 @@ export const deleteUser = createAsyncThunk(
 // Async thunk for soft deleting a user
 export const softDeleteById = createAsyncThunk(
   "users/softDeleteById",
-  async (userId, { rejectWithValue }) => {
+  async (userId, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.patch(`/api/users/${userId}/soft-delete`);
+      const response = await api.patch(`/api/users/${userId}/soft-delete`);
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -100,17 +97,13 @@ export const softDeleteById = createAsyncThunk(
 // Async thunk for uploading user media (profile picture or documents)
 export const uploadMedia = createAsyncThunk(
   "users/uploadMedia",
-  async ({ userId, formData }, { rejectWithValue }) => {
+  async ({ userId, formData }, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.post(
-        `/api/users/${userId}/media`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await api.post(`/api/users/${userId}/media`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -123,12 +116,11 @@ export const uploadMedia = createAsyncThunk(
 // Async thunk for fetching the user profile (current logged-in user)
 export const getUserProfile = createAsyncThunk(
   "users/getUserProfile",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.get("/api/profile");
+      const response = await api.get("/api/profile");
       console.log("from slice:", response.data.data);
       return response.data.data;
-
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to fetch user profile"
@@ -156,7 +148,6 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-  
     builder
       .addCase(getUsers.pending, (state) => {
         state.status = "loading";
@@ -278,7 +269,6 @@ const userSlice = createSlice({
       });
   },
 });
-
 
 export const { logoutUser } = userSlice.actions;
 

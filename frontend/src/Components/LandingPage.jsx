@@ -1,10 +1,10 @@
 import React from "react";
 import PromotionsSection from "./PromotionsSection";
 import CategoryNav from "./CategoryNav";
+import ProductsUserLists from "../pages/userpages/products/ProductUserLists"; 
 import SideAndSearchbar from "../Components/layouts/SideAndSearchbar";
 import Footer from "../Components/layouts/Footer";
 import Featured from "./Featured";
-
 
 const LandingPage = () => {
   return (
@@ -19,8 +19,9 @@ const LandingPage = () => {
       >
         <SideAndSearchbar />
         <PromotionsSection />
-<Featured/>
+        <Featured />
         <CategoryNav />
+        <ProductsUserLists />
         <Footer />
       </div>
     </>

@@ -1,7 +1,6 @@
-// searchSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
+// Initial state
 const initialState = {
   query: "",
   results: [],
@@ -9,11 +8,12 @@ const initialState = {
   error: null,
 };
 
+// Async Thunk for fetching search results
 export const fetchSearchResults = createAsyncThunk(
   "search/fetchSearchResults",
-  async (query, { rejectWithValue }) => {
+  async (query, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.get(
+      const response = await api.get(
         `/api/search?q=${encodeURIComponent(query)}`
       );
       return response.data.data;
@@ -26,6 +26,7 @@ export const fetchSearchResults = createAsyncThunk(
   }
 );
 
+// Slice
 const searchSlice = createSlice({
   name: "search",
   initialState,
@@ -55,5 +56,6 @@ const searchSlice = createSlice({
   },
 });
 
+// Export actions and reducer
 export const { setQuery, clearSearch } = searchSlice.actions;
 export default searchSlice.reducer;

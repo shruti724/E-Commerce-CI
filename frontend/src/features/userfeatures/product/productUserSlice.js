@@ -1,15 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
 // Async thunk to fetch products
 export const fetchProducts = createAsyncThunk(
   "productUser/fetchProducts",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.get("/api/products");
-      return response.data.data;
+      const response = await api.get("/api/products");
+      return response.data.data; 
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(
+        error.response?.data || "Failed to fetch products"
+      );
     }
   }
 );
@@ -17,16 +18,12 @@ export const fetchProducts = createAsyncThunk(
 // Async thunk to fetch a product by ID
 export const fetchProductById = createAsyncThunk(
   "productUser/fetchProductById",
-
-  async (productId, { rejectWithValue }) => {
-    const id = productId
-    console.log("productId: ", productId)
+  async (productId, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.get(`/api/product/${id}`);
-      console.log("response: ", response)
-      return response.data.data;
+      const response = await api.get(`/api/product/${productId}`);
+      return response.data.data; 
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || "Failed to fetch product");
     }
   }
 );

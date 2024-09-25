@@ -26,11 +26,11 @@ const PromotionsSection = () => {
           text="Sale Today"
         />
       </div>
-      <div className="d-flex justify-content-center">
+      {/* <div className="d-flex justify-content-center">
         <button className="btn btn-dark d-flex justify-content-center">
           Explore All Deals
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

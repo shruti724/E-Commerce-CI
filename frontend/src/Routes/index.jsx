@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import { useNavigate } from "react-router-dom";
 import { getUserProfile } from "../features/user/userSlice";
 import {
   Route,
@@ -40,7 +39,6 @@ import LandingPage from "../Components/LandingPage";
 const RoutesWithLogging = () => {
   const dispatch = useDispatch();
   const { profile } = useSelector((state) => state.user);
-  // const navigate = useNavigate();
   const [role, setRole] = useState(null);
 
   useEffect(() => {
@@ -50,10 +48,7 @@ const RoutesWithLogging = () => {
   useEffect(() => {
     if (profile) {
       console.log("profile: ", profile);
-      setRole(profile.role);
-      // if (isAuthenticated && profile.role === "user") {
-      //   navigate("/productuserlist");
-      // }
+      setRole(profile.role);    
     }
   }, [profile]);
 
@@ -105,7 +100,7 @@ const RoutesWithLogging = () => {
                 isAuthenticated && role === "admin" ? (
                   <Dashboard />
                 ) : (
-                  <ProductUserLists />
+                  <LandingPage />
                 )
               }
             />
@@ -125,7 +120,7 @@ const RoutesWithLogging = () => {
   return <RouterProvider router={router} />;
 };
 
-// Ensure that this file is the only place you wrap your app with BrowserRouter
+
 const Index = () => {
   return <RoutesWithLogging />;
 };

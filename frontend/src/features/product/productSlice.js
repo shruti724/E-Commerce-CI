@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
 const initialState = {
   isLoading: false,
@@ -11,10 +10,8 @@ const initialState = {
 // Async thunk to fetch products
 export const fetchProducts = createAsyncThunk(
   "product/fetchProducts",
-  async ({ page = 1, limit = 5 }) => {
-    const response = await axios.get(
-      `/api/products?page=${page}&limit=${limit}`
-    );
+  async ({ page = 1, limit = 5 }, { extra: api }) => {
+    const response = await api.get(`/api/products?page=${page}&limit=${limit}`);
     return {
       products: response.data.data,
       totalPages: response.data.pagination.totalPages,
@@ -25,8 +22,8 @@ export const fetchProducts = createAsyncThunk(
 // Async thunk to delete a product
 export const deleteProduct = createAsyncThunk(
   "product/deleteProduct",
-  async (productId) => {
-    await axios.delete(`/api/product/${productId}`);
+  async (productId, { extra: api }) => {
+    await api.delete(`/api/product/${productId}`);
     return productId;
   }
 );
@@ -34,8 +31,8 @@ export const deleteProduct = createAsyncThunk(
 // Async thunk to add a product
 export const addProduct = createAsyncThunk(
   "product/addProduct",
-  async (newProduct) => {
-    const response = await axios.post("/api/product", newProduct);
+  async (newProduct, { extra: api }) => {
+    const response = await api.post("/api/product", newProduct);
     return response.data.data;
   }
 );
@@ -43,9 +40,9 @@ export const addProduct = createAsyncThunk(
 // Async thunk to delete multiple products
 export const bulkDelete = createAsyncThunk(
   "product/bulkDeleteProducts",
-  async (productIds, { rejectWithValue }) => {
+  async (productIds, { rejectWithValue, extra: api }) => {
     try {
-      await axios.post("/api/product/bulkdelete", { ids: productIds });
+      await api.post("/api/product/bulkdelete", { ids: productIds });
       return productIds;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -53,16 +50,19 @@ export const bulkDelete = createAsyncThunk(
   }
 );
 
-// Corrected async thunk to update a product
+// Async thunk to update a product
 export const updateProduct = createAsyncThunk(
   "product/updateProduct",
-  async ({ productId, updatedProductData }, { rejectWithValue }) => {
+  async (
+    { productId, updatedProductData },
+    { rejectWithValue, extra: api }
+  ) => {
     try {
-      const response = await axios.put(
+      const response = await api.put(
         `/api/product/${productId}`,
         updatedProductData
       );
-      return response.data.data; 
+      return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -88,7 +88,7 @@ export const productSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
       })
-      
+
       .addCase(deleteProduct.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
@@ -146,5 +146,5 @@ export const productSlice = createSlice({
   },
 });
 
-// Export the reducer to be used in the store
+
 export default productSlice.reducer;

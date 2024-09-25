@@ -4,7 +4,7 @@ import React from "react";
 const Featured = () => {
   return (
     <div className="featured-section">
-      <h2 className="text-center">Featured Items</h2>
+      {/* <h2 className="text-center">Featured Items</h2> */}
 
       {/* Carousel Component */}
       <div
@@ -28,7 +28,7 @@ const Featured = () => {
               src="/assets/images/slider/img-slide-1.jpg"
               alt="First slide"
             />{" "}
-            {/* Replace with actual image */}
+          
           </div>
           <div className="carousel-item">
             <img
@@ -36,7 +36,7 @@ const Featured = () => {
               src="/assets/images/slider/img-slide-2.jpg"
               alt="Second slide"
             />{" "}
-            {/* Replace with actual image */}
+          
           </div>
           <div className="carousel-item">
             <img
@@ -44,7 +44,7 @@ const Featured = () => {
               src="/assets/images/slider/img-slide-3.jpg"
               alt="Third slide"
             />{" "}
-            {/* Replace with actual image */}
+           
           </div>
         </div>
         <a

@@ -1,17 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
 // Fetch brands
-export const fetchBrands = createAsyncThunk("brand/fetchBrands", async () => {
-  const response = await axios.get("/api/brands");
-  console.log(response.data.data);
-  return response.data.data;
-});
+export const fetchBrands = createAsyncThunk(
+  "brand/fetchBrands",
+  async (_, { extra: api }) => {
+    // Accessing the Axios instance
+    const response = await api.get("/api/brands"); 
+    console.log(response.data.data);
+    return response.data.data;
+  }
+);
 
 export const addBrand = createAsyncThunk(
   "brand/addBrand",
-  async (brandData) => {
-    const response = await axios.post("/api/brand", brandData);
+  async (brandData, { extra: api }) => {
+    // Accessing the Axios instance
+    const response = await api.post("/api/brand", brandData); // Using the Axios instance
     return response.data.data;
   }
 );
@@ -19,11 +23,12 @@ export const addBrand = createAsyncThunk(
 // Update brand
 export const updateBrand = createAsyncThunk(
   "brand/updateBrand",
-  async (updatedBrand) => {
-    const response = await axios.put(
+  async (updatedBrand, { extra: api }) => {
+    // Accessing the Axios instance
+    const response = await api.put(
       `/api/brands/${updatedBrand._id}`,
       updatedBrand
-    );
+    ); // Using the Axios instance
     return response.data.data; // Adjust based on the response structure if necessary
   }
 );
@@ -31,8 +36,9 @@ export const updateBrand = createAsyncThunk(
 // Delete brand
 export const deleteBrand = createAsyncThunk(
   "brand/deleteBrand",
-  async (brandId) => {
-    await axios.delete(`/api/brand/${brandId}`);
+  async (brandId, { extra: api }) => {
+    // Accessing the Axios instance
+    await api.delete(`/api/brand/${brandId}`); // Using the Axios instance
     return brandId;
   }
 );

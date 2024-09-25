@@ -1,20 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
 // Fetch categories
 export const fetchCategories = createAsyncThunk(
   "category/fetchCategories",
-  async () => {
-    const response = await axios.get("/api/categories");
-    console.log("data: ",response.data.data);
+  async (_, { extra: api }) => {
+    const response = await api.get("/api/categories"); 
+    console.log("data: ", response.data.data);
     return response.data.data;
   }
 );
 
 export const addCategory = createAsyncThunk(
   "category/addCategory",
-  async (categoryData) => {
-    const response = await axios.post("/api/category", categoryData);
+  async (categoryData, { extra: api }) => {
+    const response = await api.post("/api/category", categoryData); 
     return response.data.data;
   }
 );
@@ -22,8 +21,8 @@ export const addCategory = createAsyncThunk(
 // Delete category
 export const deleteCategory = createAsyncThunk(
   "category/deleteCategory",
-  async (categoryId) => {
-    await axios.delete(`/api/category/${categoryId}`);
+  async (categoryId, { extra: api }) => {
+    await api.delete(`/api/category/${categoryId}`); 
     return categoryId;
   }
 );
@@ -31,19 +30,16 @@ export const deleteCategory = createAsyncThunk(
 // Update category
 export const updateCategory = createAsyncThunk(
   "category/updateCategory",
-  async (category) => {
-    const response = await axios.put(
-      `/api/categories/${category._id}`,
-      category
-    );
-    return response.data;
+  async (category, { extra: api }) => {
+    const response = await api.put(`/api/category/${category._id}`, category); 
+    return response.data; 
   }
 );
 
 export const bulkDeleteCategories = createAsyncThunk(
   "category/bulkDeleteCategories",
-  async (categoryIds) => {
-    await axios.post(`/api/categories/bulk-delete`, { ids: categoryIds });
+  async (categoryIds, { extra: api }) => {
+    await api.post(`/api/categories/bulk-delete`, { ids: categoryIds }); 
     return categoryIds;
   }
 );
@@ -91,4 +87,3 @@ const categorySlice = createSlice({
 });
 
 export default categorySlice.reducer;
-

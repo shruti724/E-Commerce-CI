@@ -1,16 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
 // Async Thunks
 
 // Fetch all reviews for a product
 export const fetchReviews = createAsyncThunk(
   "reviews/fetchReviews",
-  async (reviewId, { rejectWithValue }) => {
+  async (_, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.get(`/api/reviews`);
-      console.log("reviewID: ", reviewId);
-      console.log("data: ", response.data);
+      const response = await api.get(`/api/reviews`);
       return { reviews: response.data.data };
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -21,9 +18,9 @@ export const fetchReviews = createAsyncThunk(
 // Add a new review
 export const addReview = createAsyncThunk(
   "reviews/addReview",
-  async (reviewData, { rejectWithValue }) => {
+  async (reviewData, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.post("/api/reviews", reviewData);
+      const response = await api.post("/api/reviews", reviewData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -34,9 +31,9 @@ export const addReview = createAsyncThunk(
 // Edit an existing review
 export const editReview = createAsyncThunk(
   "reviews/editReview",
-  async ({ reviewId, reviewData }, { rejectWithValue }) => {
+  async ({ reviewId, reviewData }, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.put(`/api/reviews/${reviewId}`, reviewData);
+      const response = await api.put(`/api/reviews/${reviewId}`, reviewData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -47,9 +44,9 @@ export const editReview = createAsyncThunk(
 // Delete a review
 export const deleteReview = createAsyncThunk(
   "reviews/deleteReview",
-  async (reviewId, { rejectWithValue }) => {
+  async (reviewId, { rejectWithValue, extra: api }) => {
     try {
-      await axios.delete(`/api/reviews/${reviewId}`);
+      await api.delete(`/api/reviews/${reviewId}`);
       return reviewId;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -60,9 +57,9 @@ export const deleteReview = createAsyncThunk(
 // Bulk delete reviews
 export const bulkDelete = createAsyncThunk(
   "reviews/bulkDelete",
-  async (reviewIds, { rejectWithValue }) => {
+  async (reviewIds, { rejectWithValue, extra: api }) => {
     try {
-      await axios.post(`/api/reviews/bulk-delete`, { ids: reviewIds });
+      await api.post(`/api/reviews/bulk-delete`, { ids: reviewIds });
       return reviewIds;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -73,9 +70,9 @@ export const bulkDelete = createAsyncThunk(
 // Update the status of a review
 export const updateReviewStatus = createAsyncThunk(
   "reviews/updateReviewStatus",
-  async ({ reviewId, status }, { rejectWithValue }) => {
+  async ({ reviewId, status }, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.put(`/api/review/${reviewId}/status`, {
+      const response = await api.put(`/api/review/${reviewId}/status`, {
         status,
       });
       return response.data;
@@ -108,7 +105,7 @@ const reviewSlice = createSlice({
       })
       .addCase(fetchReviews.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.data = action.payload.reviews;
+        state.reviews = action.payload.reviews;
       })
       .addCase(fetchReviews.rejected, (state, action) => {
         state.isLoading = false;

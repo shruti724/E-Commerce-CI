@@ -1,21 +1,18 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../../features/userfeatures/product/productUserSlice";
-import {addToCart} from "../../../features/userfeatures/cart/cartUserSilce"
+import { addToCart } from "../../../features/userfeatures/cart/cartUserSilce";
 import { Link } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify"; // Import toast functions
-import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for toastify
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import SideAndSearchbar from "../../../Components/layouts/SideAndSearchbar";
 import Footer from "../../../Components/layouts/Footer";
 
-const ProductsList = () => {
+const ProductsUserList = () => {
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector(
     (state) => state.productUser
   );
-  console.log("products: ",products)
-  
-
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -33,7 +30,7 @@ const ProductsList = () => {
     dispatch(addToCart({ product_id: productId, quantity }))
       .unwrap()
       .then(() => {
-        toast.success("Product added to cart successfully!"); 
+        toast.success("Product added to cart successfully!");
       })
       .catch((err) => {
         if (
@@ -42,25 +39,24 @@ const ProductsList = () => {
         ) {
           toast.error(
             "Not enough stock available to add the requested quantity"
-          ); // Show error toast
+          );
         } else {
-          toast.error("Failed to add product to cart. Please try again."); 
+          toast.error("Failed to add product to cart. Please try again.");
         }
       });
   };
-  
 
   return (
     <>
       <SideAndSearchbar />
-      <main >
-        <h2 className="my-4 mx-4">Products List</h2>
+      <main className="container my-3">
+        {/* <h2 className="my-4 mx-4">Products List</h2> */}
         {products && products.length === 0 ? (
           <div className="row">
-            <div className="col-12">
-              <div className="card mx-4" style={{ width: "18rem" }}>
+            <div className="col-12 ">
+              <div className="card mx-4 " style={{ width: "18rem" }}>
                 <img
-                  className="card-img-top"
+                  className="card-img-top img-fluid"
                   src="/assets/images/bag.jpg"
                   alt="Empty Products"
                 />
@@ -81,44 +77,41 @@ const ProductsList = () => {
         ) : (
           <div className="row">
             {products.map((product) => (
-              <div key={product._id} className="col-md-3 mb-4">
-                <div className="card mx-4" style={{ width: "100%" }}>
+              <div key={product._id} className="col-6 col-md-6 mb-4">
+                <div
+                  className="card"
+                  style={{ width: "90%", margin: "0 auto" }}
+                >
                   <Link to="/productdetailuser">
-                    <img
-                      src={
-                        product.product_front_image?.path ||
-                        "/assets/images/bag.jpg"
-                      }
-                      alt={product.product_front_image?.alt || product.title}
-                      className="card-img-top"
-                    />
+                    <div >
+                      {" "}
+                      <img
+                        src={
+                          product.product_front_image?.path ||
+                          "/assets/images/bag.jpg"
+                        }
+                        alt={product.product_front_image?.alt || product.title}
+                        className="card-img-top img-fluid"
+                      />
+                    </div>
                   </Link>
-                  <span className="pcoded-micon mx-4">
-                    <i
-                      className="feather icon-heart"
-                      style={{ fontSize: "1.3rem" }}
-                    ></i>
-                  </span>
-                  <div className="card-body">
-                    <span>
-                      <h3 className="card-title">{product.title}</h3>
-                    </span>
-
-                    <p className="card-text">{product.short_description}</p>
+                  <div className="card-body p-2">
+                    <h5 className="card-title">{product.title}</h5>
+                    <p className="card-text ">{product.short_description}</p>
                     <p className="card-price">${product.price}</p>
-                    <span>
+                    <div className="d-flex justify-content-between">
                       <button
                         className="btn btn-info btn-sm"
                         onClick={() => handleAddToCart(product._id, 1)}
                       >
                         Cart it
                       </button>
-                    </span>
-                    <span className="mx-1">
                       <Link to={`/product/${product._id}`}>
-                        <button className="btn btn-info btn-sm">Buy Now</button>
+                        <button className="btn btn-info btn-sm mx-1">
+                          Buy Now
+                        </button>
                       </Link>
-                    </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -127,9 +120,9 @@ const ProductsList = () => {
         )}
       </main>
       <ToastContainer />
-      <Footer/>
+      <Footer />
     </>
   );
 };
 
-export default ProductsList;
+export default ProductsUserList;

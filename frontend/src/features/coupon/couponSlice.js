@@ -1,27 +1,29 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
+// Fetch coupons
 export const fetchCoupons = createAsyncThunk(
   "coupons/fetchCoupons",
-  async () => {
-    const response = await axios.get("/api/coupons");
-    return response.data.data;
+  async (_, { extra: api }) => {
+    const response = await api.get("/api/coupons");
+    return response.data.data; 
   }
 );
 
+// Delete coupon
 export const deleteCoupon = createAsyncThunk(
   "coupons/deleteCoupon",
-  async (id) => {
-    await axios.delete(`/api/coupons/${id}`);
-    return id; // Return the id of the deleted coupon
+  async (id, { extra: api }) => {
+    await api.delete(`/api/coupons/${id}`);
+    return id;
   }
 );
 
+// Add coupon
 export const addCoupon = createAsyncThunk(
   "coupons/addCoupon",
-  async (couponData) => {
-    const response = await axios.post("/api/coupon", couponData);
-    return response.data; // Return the created coupon data
+  async (couponData, { extra: api }) => {
+    const response = await api.post("/api/coupon", couponData); 
+    return response.data; 
   }
 );
 
@@ -41,7 +43,7 @@ const couponSlice = createSlice({
       })
       .addCase(fetchCoupons.fulfilled, (state, action) => {
         state.loading = false;
-        state.coupons = action.payload;
+        state.coupons = action.payload; 
       })
       .addCase(fetchCoupons.rejected, (state, action) => {
         state.loading = false;
@@ -49,11 +51,11 @@ const couponSlice = createSlice({
       })
       .addCase(deleteCoupon.fulfilled, (state, action) => {
         state.coupons = state.coupons.filter(
-          (coupon) => coupon._id !== action.payload
+          (coupon) => coupon._id !== action.payload 
         );
       })
       .addCase(addCoupon.fulfilled, (state, action) => {
-        state.coupons.push(action.payload); // Add the new coupon to the list
+        state.coupons.push(action.payload); 
       });
   },
 });
