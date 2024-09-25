@@ -6,7 +6,7 @@ export const signupUser = createAsyncThunk(
   async (signupData, { rejectWithValue, extra: api }) => {
     try {
       const response = await api.post("/api/register", signupData);
-      return response.data;
+      return response.data.data;
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "An error occurred during signup"

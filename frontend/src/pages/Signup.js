@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { signupUser } from "../store/authSlice";
-// import axios from "axios";
+import { signupUser } from "../features/auth/authSlice";
+
 
 const Signup = () => {
   
-  // const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isLoading, error } = useSelector((state) => state.auth); 
@@ -24,6 +23,7 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   try {
     const actionResult = await dispatch(signupUser(formData));
+    console.log(actionResult)
     if (signupUser.fulfilled.match(actionResult)) {
       navigate("/"); 
     } else {
