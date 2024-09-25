@@ -1,37 +1,40 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { signupUser } from "../store/authSlice";
+// import axios from "axios";
 
 const Signup = () => {
+  
+  // const [error, setError] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isLoading, error } = useSelector((state) => state.auth); 
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
   });
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); 
-    try {
-      console.log(formData);
-      const response = await axios.post("/api/register", formData);
-      console.log(response);
-      if (response.data.success) {
-        navigate("/");
-      } else {
-        setError(response.data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      setError(error.response?.data?.message || "An error occurred");
-    }
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const actionResult = await dispatch(signupUser(formData));
+    if (signupUser.fulfilled.match(actionResult)) {
+      navigate("/"); 
+    } else {
 
-  };
+      console.error(error);
+    }
+  } catch (error) {
+    console.error(error);
+      
+  }
+};
 
   return (
     <>

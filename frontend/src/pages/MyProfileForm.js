@@ -7,8 +7,6 @@ import Footer from "../Components/layouts/Footer";
 
 const MyProfileForm = () => {
   const navigate = useNavigate();
-  // console.log("props",props.user.username)
-
 
  
 const handleLogout = async () => {
