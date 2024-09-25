@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import axios from "axios";
-import config from "../../config"; 
+import config from "../config";
 import todoReducer from "../features/todo/todoSlice";
 import productReducer from "../features/product/productSlice";
 import searchReducer from "../features/search/searchSlice";
