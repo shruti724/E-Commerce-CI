@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { signupUser } from "../features/auth/authSlice";
-
+// import { signupUser } from "../features/auth/authSlice";
+import axios from "axios";
 
 const Signup = () => {
-  
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoading, error } = useSelector((state) => state.auth); 
+  const { isLoading, error } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -19,22 +18,22 @@ const Signup = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const actionResult = await dispatch(signupUser(formData));
-    console.log(actionResult)
-    if (signupUser.fulfilled.match(actionResult)) {
-      navigate("/"); 
-    } else {
+   const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log("Submitting signup with data: ", formData);
 
-      console.error(error);
-    }
-  } catch (error) {
-    console.error(error);
-      
-  }
-};
+        try {
+            const response = await axios.post(
+              `https://e-commerce-ci-backend.onrender.com/api/register`,
+              formData
+            );
+            console.log("env: ", process.env.REACT_API_APP)
+            console.log("Signup successful, navigating to home.", response);
+        } catch (error) {
+            console.error("Signup failed:", error.response?.data || error.message || error);
+        }
+    };
+
 
   return (
     <>
@@ -51,7 +50,7 @@ const handleSubmit = async (e) => {
       />
       <meta
         name="keywords"
-        content="admin templates, bootstrap admin templates, bootstrap 4, dashboard, dashboard templets, sass admin templets, html admin templates, responsive, bootstrap admin templates free download,premium bootstrap admin templates, Flash Able, Flash Able bootstrap admin template"
+        content="admin templates, bootstrap admin templates, bootstrap 4, dashboard"
       />
       <meta name="author" content="Codedthemes" />
       <link
@@ -131,18 +130,6 @@ const handleSubmit = async (e) => {
                         required
                       />
                     </div>
-                    <div className="form-group text-left mt-2">
-                      <div className="checkbox checkbox-primary d-inline">
-                        <input
-                          type="checkbox"
-                          name="newsletter"
-                          id="checkbox-fill-2"
-                        />
-                        <label htmlFor="checkbox-fill-2" className="cr">
-                          Send me the <a href="#!">Newsletter</a> weekly.
-                        </label>
-                      </div>
-                    </div>
                     <button type="submit" className="btn btn-primary mb-4">
                       Sign up
                     </button>
@@ -164,35 +151,6 @@ const handleSubmit = async (e) => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div className="footer-fab">
-        <div className="b-bg">
-          <i className="fas fa-question" />
-        </div>
-        <div className="fab-hover">
-          <ul className="list-unstyled">
-            <li>
-              <a
-                href="../doc/index-bc-package.html"
-                target="_blank"
-                data-text="UI Kit"
-                className="btn btn-icon btn-rounded btn-info m-0"
-              >
-                <i className="feather icon-layers" />
-              </a>
-            </li>
-            <li>
-              <a
-                href="../doc/index.html"
-                target="_blank"
-                data-text="Document"
-                className="btn btn-icon btn-rounded btn-primary m-0"
-              >
-                <i className="feather icon-book" />
-              </a>
-            </li>
-          </ul>
         </div>
       </div>
     </>
