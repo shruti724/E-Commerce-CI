@@ -35,8 +35,8 @@ app.use(cookieParser());
 // CORS configuration
 app.use(
   cors({
-    origin: "http://localhost:3000",
-    "https://e-commerce-ci-frontend.onrender.com",
+    origin: ["http://localhost:3000",
+    "https://e-commerce-ci-frontend.onrender.com",],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
