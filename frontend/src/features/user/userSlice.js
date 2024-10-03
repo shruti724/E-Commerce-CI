@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-// import axios from 'axios';
 
 // Async thunk for fetching all users
 export const getUsers = createAsyncThunk(
@@ -7,10 +6,11 @@ export const getUsers = createAsyncThunk(
   async (_, { rejectWithValue, extra: api }) => {
     try {
       const response = await api.get("/api/users");
-      console.log("data:", response.data.data.users);
       return {
         users: response.data.data.users,
         totalPages: response.data.totalPages,
+        totalUsers: response.data.totalUsers, // Assuming this comes from your API
+        currentPage: response.data.currentPage, // Assuming this comes from your API
       };
     } catch (error) {
       return rejectWithValue(
@@ -41,7 +41,6 @@ export const getUserById = createAsyncThunk(
   async (userId, { rejectWithValue, extra: api }) => {
     try {
       const response = await api.get(`/api/users/${userId}`);
-
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -72,7 +71,7 @@ export const deleteUser = createAsyncThunk(
   async (userId, { rejectWithValue, extra: api }) => {
     try {
       const response = await api.delete(`/api/users/${userId}`);
-      return response.data;
+      return response.data; // Ensure this returns useful information
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to delete user"
@@ -96,7 +95,7 @@ export const softDeleteById = createAsyncThunk(
   }
 );
 
-// Async thunk for uploading user media (profile picture or documents)
+// Async thunk for uploading user media
 export const uploadMedia = createAsyncThunk(
   "users/uploadMedia",
   async ({ userId, formData }, { rejectWithValue, extra: api }) => {
@@ -121,7 +120,6 @@ export const getUserProfile = createAsyncThunk(
   async (_, { rejectWithValue, extra: api }) => {
     try {
       const response = await api.get("/api/profile");
-      console.log("from slice:", response.data.data);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(
@@ -141,6 +139,9 @@ const userSlice = createSlice({
     status: "idle",
     error: null,
     isAuthenticated: false,
+    totalPages: 0,
+    currentPage: 1,
+    totalUsers: 0,
   },
   reducers: {
     logoutUser: (state) => {
@@ -158,6 +159,8 @@ const userSlice = createSlice({
         state.status = "succeeded";
         state.users = action.payload.users;
         state.totalPages = action.payload.totalPages;
+        state.totalUsers = action.payload.totalUsers;
+        state.currentPage = action.payload.currentPage;
       })
       .addCase(getUsers.rejected, (state, action) => {
         state.status = "failed";
@@ -202,8 +205,9 @@ const userSlice = createSlice({
       })
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.status = "succeeded";
+        // Adjusting based on returned response
         state.users = state.users.filter(
-          (user) => user._id !== action.payload._id
+          (user) => user._id !== action.meta.arg
         );
       })
       .addCase(deleteUser.rejected, (state, action) => {

@@ -18,8 +18,24 @@ import categoryUserReducer from "../features/userfeatures/category/categoryUserS
 import couponReducer from "../features/coupon/couponSlice"
 
 const api = axios.create({
-  baseURL: config.apiUrl, 
+  baseURL: config.apiUrl,
 });
+
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    console.log("Token retrieved:", token); 
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 
 export const store = configureStore({
   reducer: {

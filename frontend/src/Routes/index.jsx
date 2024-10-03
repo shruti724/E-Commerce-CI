@@ -37,22 +37,28 @@ import AddCoupon from "../pages/coupons/AddCoupon";
 import LandingPage from "../Components/LandingPage";
 
 const RoutesWithLogging = () => {
-  const dispatch = useDispatch();
-  const { profile } = useSelector((state) => state.user);
-  const [role, setRole] = useState(null);
+  // const dispatch = useDispatch();
+  // const { profile } = useSelector((state) => state.user);
+  // const [role, setRole] = useState(null);
 
-  useEffect(() => {
-    dispatch(getUserProfile());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getUserProfile());
+  // }, [dispatch]);
 
-  useEffect(() => {
-    if (profile) {
-      console.log("profile: ", profile);
-      setRole(profile.role);    
-    }
-  }, [profile]);
+  // useEffect(() => {
+  //   if (profile) {
+  //     console.log("profile: ", profile);
+  //     setRole(profile.role);    
+  //   }
+  // }, [profile]);
 
-  const isAuthenticated = !!profile;
+  const userRole = localStorage.getItem("role");
+  const userToken = localStorage.getItem("token")
+  const isAdmin = userRole === "admin";
+  console.log("admin", isAdmin)
+console.log(userToken)
+  const isAuthenticated = !!userToken;
+  console.log("isAuthenticated", isAuthenticated);
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -62,7 +68,7 @@ const RoutesWithLogging = () => {
         <Route path="signup" element={<Signup />} />
 
         {/* Conditionally render routes based on role */}
-        {isAuthenticated && role === "admin" && (
+        {isAuthenticated && isAdmin && (
           <>
             <Route path="orderstable" element={<OrdersTable />} />
             <Route path="productlist" element={<ProductsList />} />
@@ -79,7 +85,7 @@ const RoutesWithLogging = () => {
             <Route path="addcoupon" element={<AddCoupon />} />
           </>
         )}
-        {isAuthenticated && role === "user" && (
+        {isAuthenticated && !isAdmin && (
           <>
             <Route path="productuserlist" element={<ProductUserLists />} />
             <Route path="wishlist" element={<WishList />} />
@@ -94,16 +100,7 @@ const RoutesWithLogging = () => {
         {/* Protected routes */}
         {
           <Route element={<Protected />}>
-            <Route
-              index
-              element={
-                isAuthenticated && role === "admin" ? (
-                  <Dashboard />
-                ) : (
-                  <LandingPage />
-                )
-              }
-            />
+            <Route index element={true ? <Dashboard /> : <LandingPage />} />
 
             <Route path="myProfileForm" element={<MyProfileForm />} />
           </Route>

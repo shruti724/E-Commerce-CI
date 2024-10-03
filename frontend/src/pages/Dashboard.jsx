@@ -24,9 +24,9 @@ const Dashboard = () => {
         // Fetch all users' details
         const usersResponse = await axios.get("/api/users");
         setUsersDetails(usersResponse.data.data);
-        
-if (userResponse.data.data.role !== 'admin') {
-          navigate('/productuserlist'); // Redirect to ProductUserList if not admin
+
+        if (userResponse.data.data.role !== "admin") {
+          navigate("/productuserlist");
           return;
         }
         //Fetch all products' details
@@ -35,8 +35,6 @@ if (userResponse.data.data.role !== 'admin') {
 
         const ordersResponse = await axios.get("/api/orders");
         setOrderDetails(ordersResponse.data);
-
-        
       } catch (err) {
         console.error("Error fetching data:", err);
         setError(err.message);
@@ -46,7 +44,7 @@ if (userResponse.data.data.role !== 'admin') {
     };
 
     fetchDetails();
-  }, []); 
+  }, []);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -61,7 +59,7 @@ if (userResponse.data.data.role !== 'admin') {
       <SideAndSearchbar />
       {/* [ Header ] end */}
       {/* [ Main Content ] start */}
-      <div className="my-12"> 
+      <div className="my-12">
         <div className="pcoded-wrapper">
           <div className="pcoded-content">
             <div className="pcoded-inner-content">
@@ -362,7 +360,7 @@ if (userResponse.data.data.role !== 'admin') {
                               <h5 className="text-c-red mb-0">
                                 +5.9%{" "}
                                 <span className="text-muted">
-                                  <s>1999</s> 
+                                  <s>1999</s>
                                 </span>
                               </h5>
                             </div>

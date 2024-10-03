@@ -30,6 +30,7 @@ export const loginUser = createAsyncThunk(
       const localStorageToken = response.data.data.token
       const localStorageRole = response.data.data.payload.user.role 
        console.log("response: ", response.data.data)
+       
        localStorage.setItem('token', localStorageToken)
        localStorage.setItem('role', localStorageRole)
        

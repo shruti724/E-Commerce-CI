@@ -6,10 +6,11 @@ import {  useSelector } from "react-redux";
 
 
 const Footer = () => {
-  const isAdmin = useSelector((state) => state.user?.profile?.role === "admin");
-  const user = useSelector((state)=> state.user)
+   
+  const userRole = localStorage.getItem("role"); 
+  const isAdmin = userRole === "admin";
   console.log("admin: ", isAdmin)
-  console.log("user: ", user)
+  console.log("user: ", userRole);
   return (
     <footer className="bd-footer py-2 bg-light fixed-bottom border-top">
       <div className="container">

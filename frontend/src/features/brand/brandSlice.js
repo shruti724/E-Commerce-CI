@@ -1,10 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-
+import axios from 'axios';
 // Fetch brands
 export const fetchBrands = createAsyncThunk(
   "brand/fetchBrands",
   async (_, { extra: api }) => {
-    // Accessing the Axios instance
     const response = await api.get("/api/brands"); 
     console.log(response.data.data);
     return response.data.data;
@@ -14,8 +13,8 @@ export const fetchBrands = createAsyncThunk(
 export const addBrand = createAsyncThunk(
   "brand/addBrand",
   async (brandData, { extra: api }) => {
-    // Accessing the Axios instance
-    const response = await api.post("/api/brand", brandData); // Using the Axios instance
+    const response = await axios.post("/api/brand", brandData); 
+    console.log(response.data.data)
     return response.data.data;
   }
 );
@@ -24,12 +23,11 @@ export const addBrand = createAsyncThunk(
 export const updateBrand = createAsyncThunk(
   "brand/updateBrand",
   async (updatedBrand, { extra: api }) => {
-    // Accessing the Axios instance
     const response = await api.put(
       `/api/brands/${updatedBrand._id}`,
       updatedBrand
-    ); // Using the Axios instance
-    return response.data.data; // Adjust based on the response structure if necessary
+    );
+    return response.data.data; 
   }
 );
 
@@ -38,7 +36,7 @@ export const deleteBrand = createAsyncThunk(
   "brand/deleteBrand",
   async (brandId, { extra: api }) => {
     // Accessing the Axios instance
-    await api.delete(`/api/brand/${brandId}`); // Using the Axios instance
+    await api.delete(`/api/brand/${brandId}`); 
     return brandId;
   }
 );
@@ -49,7 +47,7 @@ const brandSlice = createSlice({
     data: [],
     isLoading: false,
     isError: false,
-    pagination: {}, // Include pagination in the state if needed
+    pagination: {}, 
   },
   extraReducers: (builder) => {
     builder
@@ -59,9 +57,7 @@ const brandSlice = createSlice({
       })
       .addCase(fetchBrands.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.data = action.payload; // Set the brands array
-        // Optionally handle pagination if needed
-        // state.pagination = action.payload.pagination;
+        state.data = action.payload;
       })
       .addCase(fetchBrands.rejected, (state) => {
         state.isLoading = false;
