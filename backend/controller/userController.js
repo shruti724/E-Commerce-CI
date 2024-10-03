@@ -266,7 +266,7 @@ async function loginUser(req, res) {
       (err, token) => {
         if (err) throw err;
         res.cookie("token", token, { httpOnly: true });
-        res.json({ success: true, data:{}, message: "Login successful", status: 200});
+        res.json({ success: true, data:{token, payload}, message: "Login successful", status: 200});
       }
     );
   } catch (error) {
