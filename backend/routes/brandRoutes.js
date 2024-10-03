@@ -22,7 +22,7 @@ router.post("/upload/:id", upload.array("brand_front_image", 10), media);
 
 
 
-router.post("/brand", authMiddleware, addBrand);
+router.post("/brand", addBrand);
 router.get("/brands", getBrands);
 router.put("/brand/:id", updateBrand);
 router.delete("/brand/:id", authMiddleware, checkAdmin, deleteBrand);
