@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+// import axios from 'axios';
 
 // Async thunk for fetching all users
 export const getUsers = createAsyncThunk(
@@ -40,6 +41,7 @@ export const getUserById = createAsyncThunk(
   async (userId, { rejectWithValue, extra: api }) => {
     try {
       const response = await api.get(`/api/users/${userId}`);
+
       return response.data;
     } catch (error) {
       return rejectWithValue(

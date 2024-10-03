@@ -1,4 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
+// import axios from 'axios';
+
 
 // signupUser async thunk using extra: api
 export const signupUser = createAsyncThunk(
@@ -20,9 +23,18 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (loginData, { rejectWithValue, extra: api }) => {
     try {
-      const response = await api.post("/api/login", loginData);
-      console.log("login data: ",response.data);
+      const response = await api.post("/api/login", loginData, {
+        withCredentials: true
+      });
+       
+      const localStorageToken = response.data.data.token
+      const localStorageRole = response.data.data.payload.user.role 
+       console.log("response: ", response.data.data)
+       localStorage.setItem('token', localStorageToken)
+       localStorage.setItem('role', localStorageRole)
+       
       return response.data;
+
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "An error occurred during login"
@@ -36,7 +48,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: null,
-    isAuthenticated: false,
+    isAuthenticated: !!Cookies.get('token'),
     isLoading: false,
     error: null,
   },
@@ -55,10 +67,10 @@ const authSlice = createSlice({
          state.error = null;
        })
        .addCase(signupUser.fulfilled, (state, action) => {
-         state.user = action.payload.user; 
+         state.user = action.payload.data; 
          state.isAuthenticated = true;
          state.isLoading = false;
-         localStorage.setItem("token", action.payload.token);
+         
        })
        .addCase(signupUser.rejected, (state, action) => {
          state.isAuthenticated = false;
@@ -68,16 +80,18 @@ const authSlice = createSlice({
 
     // Handle login actions
     builder
-      .addCase(loginUser.pending, (state) => {
+      .addCase(loginUser.pending, (state, action) => {
         state.isLoading = true;
         state.error = null;
+        //  localStorage.setItem("token", action.payload.data.token);
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        console.log(action.payload);
-        state.user = action.payload.user;
+        console.log("Payload: ", action.payload)
+        state.user = action.payload.data;
         state.isAuthenticated = true;
         state.isLoading = false;
-        localStorage.setItem("token", action.payload.token);
+        // localStorage.setItem("token", action.payload.data.token);
+        
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isAuthenticated = false;

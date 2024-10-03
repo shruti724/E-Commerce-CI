@@ -51,7 +51,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://e-commerce-ci-backend.onrender.com",
+  "proxy": "http://localhost:5000",
   "devDependencies": {
     "@reduxjs/toolkit": "^2.2.7",
     "axios-mock-adapter": "^2.0.0",
