@@ -11,7 +11,7 @@ router.post(
 );
 
 // Get a list of shipments
-router.get("/shipments", authMiddleware, shipmentController.getShipments);
+router.get("/shipments", shipmentController.getShipments);
 
 // Get shipment by ID
 router.get(

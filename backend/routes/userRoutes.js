@@ -18,15 +18,15 @@ const router = express.Router();
 
 
 router.post("/register", createUser);
-router.get("/users", authMiddleware, checkAdmin, getUsers);
-router.get("/user/:id", authMiddleware, getUserById);
+router.get("/users",  getUsers);
+router.get("/user/:id", getUserById);
 router.post("/login", loginUser);
-router.put("/user/:id", authMiddleware, updateUser); 
-router.delete("/user/:id", authMiddleware, checkAdmin, deleteUser);
+router.put("/user/:id", updateUser); 
+router.delete("/user/:id", deleteUser);
 router.delete("/user/soft/:id", softDeleteById)
 router.post("/logout", logoutUser);
-router.post("/users/profile_image", authMiddleware, media);
-router.get("/profile", authMiddleware, getUserProfile);
+router.post("/users/profile_image",  media);
+router.get("/profile", getUserProfile);
 
 
 function checkAdmin(req, res, next) {

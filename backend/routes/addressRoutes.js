@@ -9,9 +9,9 @@ const {
 
 const authMiddleware = require("../middlewares/authMiddleware");
 
-router.post("/address", authMiddleware, createAddress);
-router.get("/addresses", authMiddleware, getUserWithAddresses);
-router.post("/address/other", authMiddleware, addANewAddress);
-router.delete("/address/:id", authMiddleware, deleteAddress);
+router.post("/address", createAddress);
+router.get("/addresses", getUserWithAddresses);
+router.post("/address/other", addANewAddress);
+router.delete("/address/:id", deleteAddress);
 module.exports = router;
  

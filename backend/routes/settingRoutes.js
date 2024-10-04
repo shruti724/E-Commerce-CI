@@ -10,9 +10,9 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const checkAdmin = require("../middlewares/isAdmin")
 
 
-router.get("/settings", authMiddleware, checkAdmin, getAllSettings);
-router.get("/settings/:key", authMiddleware, checkAdmin, getSettingByKey);
-router.put("/settings/:key", authMiddleware, checkAdmin, upsertSetting);
-router.delete("/settings/:key", authMiddleware, checkAdmin, deleteSetting);
+router.get("/settings", getAllSettings);
+router.get("/settings/:key", getSettingByKey);
+router.put("/settings/:key", upsertSetting);
+router.delete("/settings/:key", deleteSetting);
 
 module.exports = router;

@@ -5,19 +5,19 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const paginationMiddleware = require("../middlewares/paginationMiddleware")
 
 // Create a new coupon
-router.post("/coupon", authMiddleware,couponController.createCoupon);
+router.post("/coupon", couponController.createCoupon);
 
 // Get a list of coupons
-router.get("/coupons", authMiddleware, paginationMiddleware, couponController.getCoupons);
+router.get("/coupons", paginationMiddleware, couponController.getCoupons);
 
 // Get coupon by ID
-router.get("/coupons/:id", authMiddleware, couponController.getCouponById);
+router.get("/coupons/:id", couponController.getCouponById);
 
 // Update coupon information
-router.put("/coupons/:id", authMiddleware, couponController.updateCoupon);
+router.put("/coupons/:id", couponController.updateCoupon);
 
 // Delete a coupon
-router.delete("/coupons/:id", authMiddleware, couponController.deleteCoupon);
+router.delete("/coupons/:id", couponController.deleteCoupon);
 
-router.post("/coupons/apply", authMiddleware, couponController.applyCoupon);
+router.post("/coupons/apply", couponController.applyCoupon);
 module.exports = router;

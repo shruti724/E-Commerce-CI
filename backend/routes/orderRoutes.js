@@ -5,25 +5,24 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const checkAdmin = require("../middlewares/isAdmin")
 
 // Create a new order
-router.post("/order", authMiddleware, orderController.createOrder);
+router.post("/order",  orderController.createOrder);
 
 // Get a list of orders
-router.get("/orders", authMiddleware, orderController.getOrders);
+router.get("/orders",  orderController.getOrders);
 
 // Get order by ID
-router.get("/order/:id", authMiddleware, orderController.getOrderById);
+router.get("/order/:id",  orderController.getOrderById);
 
-router.get("/orderuser", authMiddleware, orderController.getOrdersByLoggedInUser);
+router.get("/orderuser",  orderController.getOrdersByLoggedInUser);
 
 // Update order status
 router.put(
   "/order/:id",
-  authMiddleware,
-  checkAdmin,
+ 
   orderController.updateOrderStatus
 );
 
 // Delete an order
-router.delete("/order/:id", authMiddleware, orderController.deleteOrder);
+router.delete("/order/:id",  orderController.deleteOrder);
 
 module.exports = router;

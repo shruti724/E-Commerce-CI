@@ -8,8 +8,8 @@ const {
 const authMiddleware = require("../middlewares/authMiddleware");
 const router = express.Router();
 
-router.get("/wishlist", authMiddleware, getWishList);
-router.post("/wishlist", authMiddleware, addToWishList);
-router.delete("/wishlist/:id", authMiddleware, removeWishListItem);
+router.get("/wishlist", getWishList);
+router.post("/wishlist",  addToWishList);
+router.delete("/wishlist/:id", removeWishListItem);
 
 module.exports = router;

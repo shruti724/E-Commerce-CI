@@ -17,14 +17,14 @@ const router = express.Router();
 
 // Route definitions
 router.get("/categories",  getCategories);
-router.post("/category", authMiddleware, checkAdmin, addCategory); 
-router.put("/category/:id", authMiddleware, checkAdmin, updateCategory);
-router.delete("/category/:id", authMiddleware, checkAdmin, deleteCategory);
+router.post("/category", addCategory); 
+router.put("/category/:id", updateCategory);
+router.delete("/category/:id", deleteCategory);
 router.post("/addProduct", addProductToCategory); 
-router.get("/:id/products", authMiddleware, getCategoryWithProducts);
+router.get("/:id/products", getCategoryWithProducts);
 router.post(
   "/upload/:id",
-  authMiddleware,
+
   upload.array("category_front_image", 10),
   media
 ); 
