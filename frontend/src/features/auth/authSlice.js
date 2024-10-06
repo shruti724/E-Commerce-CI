@@ -23,7 +23,7 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (loginData, { rejectWithValue, extra: api }) => {
     try {
-      const response = await axios.post("/api/login", loginData, {
+      const response = await api.post("/api/login", loginData, {
         withCredentials: true
       });
        
