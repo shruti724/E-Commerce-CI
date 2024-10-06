@@ -6,7 +6,7 @@ import { fetchProducts } from "../features/product/productSlice";
 import { fetchOrders } from "../features/order/orderSlice";
 import SideAndSearchbar from "../Components/layouts/SideAndSearchbar"
 import Footer from "../Components/layouts/Footer"
-import { removeListener } from "../../../backend/models/userModel";
+
 
 const Dashboard = () => {
   const dispatch = useDispatch();
