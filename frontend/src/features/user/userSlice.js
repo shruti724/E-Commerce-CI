@@ -116,20 +116,20 @@ export const uploadMedia = createAsyncThunk(
 );
 
 // Async thunk for fetching the user profile (current logged-in user)
-export const getUserProfile = createAsyncThunk(
-  "users/getUserProfile",
-  async (_, { rejectWithValue, extra: api }) => {
-    try {
-      const response = await api.get("/api/profile");
-      console.log("profile: ", response)
-      return response.data.data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Failed to fetch user profile"
-      );
-    }
-  }
-);
+// export const getUserProfile = createAsyncThunk(
+//   "users/getUserProfile",
+//   async (_, { rejectWithValue, extra: api }) => {
+//     try {
+//       const response = await api.get("/api/profile");
+//       console.log("profile: ", response)
+//       return response.data.data;
+//     } catch (error) {
+//       return rejectWithValue(
+//         error.response?.data?.message || "Failed to fetch user profile"
+//       );
+//     }
+//   }
+// );
 
 // User slice
 const userSlice = createSlice({
@@ -249,18 +249,18 @@ const userSlice = createSlice({
       });
 
     // Get User Profile cases
-    builder
-      .addCase(getUserProfile.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(getUserProfile.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.profile = action.payload;
-      })
-      .addCase(getUserProfile.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      });
+    // builder
+    //   .addCase(getUserProfile.pending, (state) => {
+    //     state.status = "loading";
+    //   })
+    //   .addCase(getUserProfile.fulfilled, (state, action) => {
+    //     state.status = "succeeded";
+    //     state.profile = action.payload;
+    //   })
+    //   .addCase(getUserProfile.rejected, (state, action) => {
+    //     state.status = "failed";
+    //     state.error = action.payload;
+    //   });
 
     // Create User cases
     builder

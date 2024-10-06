@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getUserProfile, getUsers } from "../features/user/userSlice";
+import { getUsers } from "../features/user/userSlice";
 import { fetchProducts } from "../features/product/productSlice";
 import { fetchOrders } from "../features/order/orderSlice";
 import SideAndSearchbar from "../Components/layouts/SideAndSearchbar"
 import Footer from "../Components/layouts/Footer"
+import { removeListener } from "../../../backend/models/userModel";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ const Dashboard = () => {
     error: userError,
     status: userStatus,
   } = useSelector((state) => state.user);
-  const { users, status: usersStatus } = useSelector((state) => state.user); // Add proper selectors for users
+  const { users, status: usersStatus } = useSelector((state) => state.user); 
   const { products, status: productsStatus } = useSelector(
     (state) => state.product
   );
@@ -36,7 +37,7 @@ const Dashboard = () => {
     const fetchDetails = async () => {
       try {
         // Dispatch actions to fetch data
-        await dispatch(getUserProfile()); 
+        // await dispatch(getUserProfile()); 
         await dispatch(getUsers()); 
         await dispatch(fetchProducts()); 
         await dispatch(fetchOrders()); 
@@ -49,8 +50,11 @@ const Dashboard = () => {
   }, [dispatch]);
 
   // Handle navigation after fetching profile
+  const token = localStorage.getItem("token")
+  const role = localStorage.getItem("role")
+
   useEffect(() => {
-    if (profile && profile.role !== "admin") {
+    if (token && role !== "admin") {
       navigate("/productuserlist");
     }
   }, [profile, navigate]);
