@@ -411,39 +411,39 @@ const media = (req, res, next) => {
   });
 };
 
-const getUserProfile = async (req, res) => {
-  console.log("abc")
-  try {
-    const user_id = req.user.id; 
-    console.log("User ID:", user_id); 
+// const getUserProfile = async (req, res) => {
+//   console.log("abc")
+//   try {
+//     const user_id = req.user.id; 
+//     console.log("User ID:", user_id); 
 
 
-    const user = await User.findById(user_id); 
+//     const user = await User.findById(user_id); 
 
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        data: {},
-        message: "User not found",
-        status: 404,
-      });
-    }
+//     if (!user) {
+//       return res.status(404).json({
+//         success: false,
+//         data: {},
+//         message: "User not found",
+//         status: 404,
+//       });
+//     }
 
-    res.status(200).json({
-      success: true,
-      data: user,
-      message: "User profile retrieved successfully",
-      status: 200,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      data: {},
-      message: "Server error",
-      status: 500,
-    });
-  }
-};
+//     res.status(200).json({
+//       success: true,
+//       data: user,
+//       message: "User profile retrieved successfully",
+//       status: 200,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       data: {},
+//       message: "Server error",
+//       status: 500,
+//     });
+//   }
+// };
 
 
 module.exports = {
@@ -456,5 +456,5 @@ module.exports = {
   softDeleteById,
   logoutUser,
   media,
-  getUserProfile
+  // getUserProfile
 };

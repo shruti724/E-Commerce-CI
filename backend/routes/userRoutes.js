@@ -11,7 +11,7 @@ const {
   softDeleteById,
   logoutUser,
   media,
-  getUserProfile,
+  // getUserProfile,
 } = require("../controller/userController");
 
 const router = express.Router();
@@ -26,7 +26,7 @@ router.delete("/user/:id", deleteUser);
 router.delete("/user/soft/:id", softDeleteById)
 router.post("/logout", logoutUser);
 router.post("/users/profile_image",  media);
-router.get("/profile", getUserProfile);
+// router.get("/profile", getUserProfile);
 
 
 function checkAdmin(req, res, next) {
