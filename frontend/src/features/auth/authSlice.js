@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
-// import axios from 'axios';
+import axios from 'axios';
 
 
 // signupUser async thunk using extra: api
@@ -23,7 +23,7 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (loginData, { rejectWithValue, extra: api }) => {
     try {
-      const response = await api.post("/api/login", loginData, {
+      const response = await axios.post("/api/login", loginData, {
         withCredentials: true
       });
        

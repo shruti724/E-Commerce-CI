@@ -10,8 +10,8 @@ export const getUsers = createAsyncThunk(
       return {
         users: response.data.data.users,
         totalPages: response.data.totalPages,
-        totalUsers: response.data.totalUsers, // Assuming this comes from your API
-        currentPage: response.data.currentPage, // Assuming this comes from your API
+        totalUsers: response.data.totalUsers, 
+        currentPage: response.data.currentPage, 
       };
     } catch (error) {
       return rejectWithValue(

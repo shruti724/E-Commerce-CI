@@ -2,70 +2,67 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getUsers } from "../features/user/userSlice";
-import { fetchProducts } from "../features/product/productSlice";
-import { fetchOrders } from "../features/order/orderSlice";
+// import { fetchProducts } from "../features/product/productSlice";
+// import { fetchOrders } from "../features/order/orderSlice";
 import SideAndSearchbar from "../Components/layouts/SideAndSearchbar"
 import Footer from "../Components/layouts/Footer"
 
 
 const Dashboard = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const dispatch = useDispatch();
+  // const navigate = useNavigate();
 
-  // Selectors from Redux state
-  const {
-    profile,
-    isAuthenticated,
-    error: userError,
-    status: userStatus,
-  } = useSelector((state) => state.user);
-  const { users, status: usersStatus } = useSelector((state) => state.user); 
-  const { products, status: productsStatus } = useSelector(
-    (state) => state.product
-  );
-  const { orders, status: ordersStatus } = useSelector((state) => state.order);
+  // const {
+  //   users,
+  //   totalPages,
+  //   currentPage,
+  //   totalUsers,
+  //   loading: userLoading, 
+  //   error: userError, 
+  // } = useSelector((state) => state.user);
 
-  const loading =
-    userStatus === "loading" ||
-    usersStatus === "loading" ||
-    productsStatus === "loading" ||
-    ordersStatus === "loading";
+  // // Product-related state
+  // // const {
+  // //   isLoading: productLoading, 
+  // //   data, 
+  // //   isError: productError, 
+  // // } = useSelector((state) => state.product);
 
-  const error = userError || "Failed to fetch data"; 
+  // // const { orders, status: ordersStatus } = useSelector((state) => state.order); 
 
-  useEffect(() => {
-    const fetchDetails = async () => {
-      try {
-        // Dispatch actions to fetch data
-        // await dispatch(getUserProfile()); 
-        await dispatch(getUsers()); 
-        await dispatch(fetchProducts()); 
-        await dispatch(fetchOrders()); 
-      } catch (err) {
-        console.error("Error fetching data:", err);
-      }
-    };
+  // const loading =
+  //   userLoading === true
+  //   // productLoading === true 
+  //   // ordersStatus === "loading";
 
-    fetchDetails();
-  }, [dispatch]);
 
-  // Handle navigation after fetching profile
-  const token = localStorage.getItem("token")
-  const role = localStorage.getItem("role")
+  // const error = userError || "Failed to fetch data";
 
-  useEffect(() => {
-    if (token && role !== "admin") {
-      navigate("/productuserlist");
-    }
-  }, [profile, navigate]);
+  // useEffect(() => {
+  //   const fetchDetails = async () => {
+  //     try {
+  //       // Dispatch actions to fetch data
+  //       // await dispatch(getUserProfile());
+  //       await dispatch(getUsers());
+  //       // await dispatch(fetchProducts());
+  //       // await dispatch(fetchOrders());
+  //     } catch (err) {
+  //       console.error("Error fetching data:", err);
+  //     }
+  //   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  //   fetchDetails();
+  // }, [dispatch]);
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+
+
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
+
+  // if (error) {
+  //   return <div>Error is here: {error}</div>;
+  // }
 
   return (
     <>
