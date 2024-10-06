@@ -6,6 +6,7 @@ export const getUsers = createAsyncThunk(
   async (_, { rejectWithValue, extra: api }) => {
     try {
       const response = await api.get("/api/users");
+      console.log("users: ", response)
       return {
         users: response.data.data.users,
         totalPages: response.data.totalPages,
@@ -120,6 +121,7 @@ export const getUserProfile = createAsyncThunk(
   async (_, { rejectWithValue, extra: api }) => {
     try {
       const response = await api.get("/api/profile");
+      console.log("profile: ", response)
       return response.data.data;
     } catch (error) {
       return rejectWithValue(

@@ -16,6 +16,7 @@ import cartUserReducer from "../features/userfeatures/cart/cartUserSilce"
 import orderUserReducer from "../features/userfeatures/order/orderUserSlice"
 import categoryUserReducer from "../features/userfeatures/category/categoryUserSlice";
 import couponReducer from "../features/coupon/couponSlice"
+import orderReducer from "../features/order/orderSlice"
 
 const api = axios.create({
   baseURL: config.apiUrl,
@@ -54,6 +55,7 @@ export const store = configureStore({
     orderUser: orderUserReducer,
     categoryUser: categoryUserReducer,
     coupons: couponReducer,
+    order: orderReducer, 
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -13,7 +13,7 @@ export const fetchBrands = createAsyncThunk(
 export const addBrand = createAsyncThunk(
   "brand/addBrand",
   async (brandData, { extra: api }) => {
-    const response = await axios.post("/api/brand", brandData); 
+    const response = await api.post("/api/brand", brandData); 
     console.log(response.data.data)
     return response.data.data;
   }
@@ -35,11 +35,11 @@ export const updateBrand = createAsyncThunk(
 export const deleteBrand = createAsyncThunk(
   "brand/deleteBrand",
   async (brandId, { extra: api }) => {
-    // Accessing the Axios instance
     await api.delete(`/api/brand/${brandId}`); 
     return brandId;
   }
 );
+
 
 const brandSlice = createSlice({
   name: "brand",

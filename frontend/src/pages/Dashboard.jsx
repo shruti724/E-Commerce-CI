@@ -1,50 +1,59 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import SideAndSearchbar from "../Components/layouts/SideAndSearchbar";
-import Footer from "../Components/layouts/Footer";
+import { getUserProfile, getUsers } from "../features/user/userSlice";
+import { fetchProducts } from "../features/product/productSlice";
+import { fetchOrders } from "../features/order/orderSlice";
+import SideAndSearchbar from "../Components/layouts/SideAndSearchbar"
+import Footer from "../Components/layouts/Footer"
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [user, setUser] = useState([]);
-  const [productsDetails, setProductsDetails] = useState(null);
-  const [ordersDetails, setOrderDetails] = useState(null);
-  const [usersDetails, setUsersDetails] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+
+  // Selectors from Redux state
+  const {
+    profile,
+    isAuthenticated,
+    error: userError,
+    status: userStatus,
+  } = useSelector((state) => state.user);
+  const { users, status: usersStatus } = useSelector((state) => state.user); // Add proper selectors for users
+  const { products, status: productsStatus } = useSelector(
+    (state) => state.product
+  );
+  const { orders, status: ordersStatus } = useSelector((state) => state.order);
+
+  const loading =
+    userStatus === "loading" ||
+    usersStatus === "loading" ||
+    productsStatus === "loading" ||
+    ordersStatus === "loading";
+
+  const error = userError || "Failed to fetch data"; 
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        // Fetch user profile data
-        const userResponse = await axios.get("/api/profile");
-        setUser(userResponse.data.data);
-
-        // Fetch all users' details
-        const usersResponse = await axios.get("/api/users");
-        setUsersDetails(usersResponse.data.data);
-
-        if (userResponse.data.data.role !== "admin") {
-          navigate("/productuserlist");
-          return;
-        }
-        //Fetch all products' details
-        const productResponse = await axios.get("api/products");
-        setProductsDetails(productResponse.data.pagination);
-
-        const ordersResponse = await axios.get("/api/orders");
-        setOrderDetails(ordersResponse.data);
+        // Dispatch actions to fetch data
+        await dispatch(getUserProfile()); 
+        await dispatch(getUsers()); 
+        await dispatch(fetchProducts()); 
+        await dispatch(fetchOrders()); 
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchDetails();
-  }, []);
+  }, [dispatch]);
+
+  // Handle navigation after fetching profile
+  useEffect(() => {
+    if (profile && profile.role !== "admin") {
+      navigate("/productuserlist");
+    }
+  }, [profile, navigate]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -101,9 +110,9 @@ const Dashboard = () => {
                               </h6>
                               <h3 className="m-b-0 text-white">
                                 ₹
-                                {ordersDetails
+                                {/* {ordersDetails
                                   ? ordersDetails.totalSalesAmount
-                                  : 1234}
+                                  : 1234} */}
                               </h3>
                             </div>
                             <div className="col-auto">
@@ -126,9 +135,9 @@ const Dashboard = () => {
                             <div className="col">
                               <h6 className="m-b-5 text-white">Total Orders</h6>
                               <h3 className="m-b-0 text-white">
-                                {ordersDetails
+                                {/* {ordersDetails
                                   ? ordersDetails.totalItems
-                                  : 1235}
+                                  : 1235} */}
                               </h3>
                             </div>
                             <div className="col-auto">
@@ -153,9 +162,9 @@ const Dashboard = () => {
                                 Total Products
                               </h6>
                               <h3 className="m-b-0 text-white">
-                                {productsDetails
+                                {/* {productsDetails
                                   ? productsDetails.total
-                                  : "5432"}
+                                  : "5432"} */}
                               </h3>
                             </div>
                             <div className="col-auto">
@@ -178,9 +187,9 @@ const Dashboard = () => {
                             <div className="col">
                               <h6 className="m-b-5 text-white">Total Users</h6>
                               <h3 className="m-b-0 text-white">
-                                {usersDetails
+                                {/* {usersDetails
                                   ? usersDetails.totalUsers
-                                  : "12345"}
+                                  : "12345"} */}
                               </h3>
                             </div>
                             <div className="col-auto">
@@ -1486,10 +1495,10 @@ const Dashboard = () => {
                             />
                           </div>
                           <h6 className="f-w-600 m-t-25 m-b-10">
-                            {user ? user.username : "Guest"}
+                            {/* {user ? user.username : "Guest"} */}
                             {/*  dynamically repace name extracting from token  */}
                           </h6>
-                          <p>{user.status} | Male | Born 23.05.1992</p>
+                          {/* <p>{user.status} | Male | Born 23.05.1992</p> */}
                           <hr />
                           <p className="m-t-15">Activity Level: 87%</p>
                           <div className="bg-c-blue counter-block m-t-10 p-20">

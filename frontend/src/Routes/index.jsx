@@ -56,7 +56,7 @@ const RoutesWithLogging = () => {
   const userToken = localStorage.getItem("token")
   const isAdmin = userRole === "admin";
   console.log("admin", isAdmin)
-console.log(userToken)
+console.log("user token: ",userToken)
   const isAuthenticated = !!userToken;
   console.log("isAuthenticated", isAuthenticated);
 
