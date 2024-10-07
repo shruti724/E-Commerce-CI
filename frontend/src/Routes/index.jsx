@@ -100,12 +100,12 @@ console.log("user token: ",userToken)
         {/* Protected routes */}
         {
           <Route element={<Protected />}>
-            <Route
+           { isAuthenticated && (<Route
               index
               element={
                 isAdmin ? <Dashboard /> : <LandingPage />
               }
-            />
+            />)}
 
             <Route path="myProfileForm" element={<MyProfileForm />} />
           </Route>
