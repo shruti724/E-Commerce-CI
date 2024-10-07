@@ -6,6 +6,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider,
+  Navigate,
 } from "react-router-dom";
 import Protected from "./protected";
 import Dashboard from "../pages/Dashboard";
@@ -100,17 +101,23 @@ console.log("user token: ",userToken)
         {/* Protected routes */}
         {
           <Route element={<Protected />}>
-           { isAuthenticated && (<Route
-              index
-              element={
-                isAdmin ? <Dashboard /> : <LandingPage />
-              }
-            />)}
+            {isAuthenticated && (
+              <Route
+                index
+                element={
+                  isAdmin ? (
+                    <Navigate to="/dashboard" />
+                  ) : (
+                    <Navigate to="/landingpage" />
+                  )
+                }
+              />
+            )}
 
             <Route path="myProfileForm" element={<MyProfileForm />} />
           </Route>
         }
-        <Route path="dashboard" element={<Dashboard/>}/>
+        <Route path="dashboard" element={<Dashboard />} />
         <Route path="landingpage" element={<LandingPage />} />
         <Route path="resetpassword" element={<ResetPassword />} />
         <Route path="/reset/:token" element={<NewPassword />} />
