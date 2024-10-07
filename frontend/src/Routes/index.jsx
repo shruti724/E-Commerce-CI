@@ -110,6 +110,7 @@ console.log("user token: ",userToken)
             <Route path="myProfileForm" element={<MyProfileForm />} />
           </Route>
         }
+        <Route path="dashboard" element={<Dashboard/>}/>
         <Route path="landingpage" element={<LandingPage />} />
         <Route path="resetpassword" element={<ResetPassword />} />
         <Route path="/reset/:token" element={<NewPassword />} />
