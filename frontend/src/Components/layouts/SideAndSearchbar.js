@@ -16,8 +16,8 @@ const SideAndSearchbar = () => {
   const dispatch = useDispatch();
   const query = useSelector((state) => state.search.query);
   const [inputValue, setInputValue] = useState(query);
-  const isAdmin = useSelector((state) => state.user?.profile?.role === "admin");
-  const isUser = useSelector((state) => state.user?.profile?.role === "user");
+  const isAdmin = localStorage.getItem("role") === "admin";
+  const isUser = localStorage.getItem("role") === "user";
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDrawer = () => {
